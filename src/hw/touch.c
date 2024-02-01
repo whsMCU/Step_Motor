@@ -70,7 +70,6 @@ void Init_touch_param(tft_touch_t *param)
 uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
   uint16_t tmp;
 
-
   begin_touch_read_write();
 
   // Start YP sample request for x position, read 4 times and keep last sample
