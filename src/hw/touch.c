@@ -24,7 +24,7 @@ static inline void begin_touch_read_write(void){
 	TFT_CS_H; // Just in case it has been left low
 	SPI_Set_Speed_hz(_DEF_SPI1, SPI_TOUCH_FREQUENCY);
     //spi.setFrequency(SPI_TOUCH_FREQUENCY);
-    Toutch_CS_L;
+  Toutch_CS_L;
 }
 
 /***************************************************************************************
@@ -33,7 +33,7 @@ static inline void begin_touch_read_write(void){
 ***************************************************************************************/
 static inline void end_touch_read_write(void){
 	Toutch_CS_H;
-    SPI_Set_Speed_hz(_DEF_SPI1, SPI_FREQUENCY);
+  SPI_Set_Speed_hz(_DEF_SPI1, SPI_FREQUENCY);
     //spi.setFrequency(SPI_FREQUENCY);
   //SET_BUS_WRITE_MODE;
 }
@@ -81,13 +81,6 @@ uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
   spiTransfer8(_DEF_SPI1, 0xd0);
   spiTransfer8(_DEF_SPI1, 0);
   spiTransfer8(_DEF_SPI1, 0xd0);
-//  spi.transfer(0xd0);                    // Start new YP conversion
-//  spi.transfer(0);                       // Read first 8 bits
-//  spi.transfer(0xd0);                    // Read last 8 bits and start new YP conversion
-//  spi.transfer(0);                       // Read first 8 bits
-//  spi.transfer(0xd0);                    // Read last 8 bits and start new YP conversion
-//  spi.transfer(0);                       // Read first 8 bits
-//  spi.transfer(0xd0);                    // Read last 8 bits and start new YP conversion
 
   tmp = spiTransfer8(_DEF_SPI1, 0);                   // Read first 8 bits
   tmp = tmp <<5;
@@ -95,38 +88,19 @@ uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
 
   *x = tmp;
 
-//  tmp = spi.transfer(0);                   // Read first 8 bits
-//  tmp = tmp <<5;
-//  tmp |= 0x1f & (spi.transfer(0x90)>>3);   // Read last 8 bits and start new XP conversion
-//
-//  *x = tmp;
+  spiTransfer8(_DEF_SPI1, 0);
+  spiTransfer8(_DEF_SPI1, 0x90);
+  spiTransfer8(_DEF_SPI1, 0);
+  spiTransfer8(_DEF_SPI1, 0x90);
+  spiTransfer8(_DEF_SPI1, 0);
+  spiTransfer8(_DEF_SPI1, 0x90);
 
-  // Start XP sample request for y position, read 4 times and keep last sample
-
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0x90);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0x90);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0x90);
-//  spi.transfer(0);                       // Read first 8 bits
-//  spi.transfer(0x90);                    // Read last 8 bits and start new XP conversion
-//  spi.transfer(0);                       // Read first 8 bits
-//  spi.transfer(0x90);                    // Read last 8 bits and start new XP conversion
-//  spi.transfer(0);                       // Read first 8 bits
-//  spi.transfer(0x90);                    // Read last 8 bits and start new XP conversion
 
   tmp = spiTransfer8(_DEF_SPI1, 0);;                 // Read first 8 bits
   tmp = tmp <<5;
   tmp |= 0x1f & (spiTransfer8(_DEF_SPI1, 0)>>3);    // Read last 8 bits
 
   *y = tmp;
-
-//  tmp = spi.transfer(0);                 // Read first 8 bits
-//  tmp = tmp <<5;
-//  tmp |= 0x1f & (spi.transfer(0)>>3);    // Read last 8 bits
-//
-//  *y = tmp;
 
   end_touch_read_write();
 
@@ -147,7 +121,7 @@ uint16_t getTouchRawZ(void){
 //  spi.transfer(0xb0);               // Start new Z1 conversion
 
   tz += spiTransfer16(_DEF_SPI1, 0xc0) >> 3;  // Read Z1 and start Z2 conversion
-  tz -= spiTransfer16(_DEF_SPI1, 0xc0) >> 3;  // Read Z2
+  tz -= spiTransfer16(_DEF_SPI1, 0x00) >> 3;  // Read Z2
 //  tz += spi.transfer16(0xc0) >> 3;  // Read Z1 and start Z2 conversion
 //  tz -= spi.transfer16(0x00) >> 3;  // Read Z2
 
