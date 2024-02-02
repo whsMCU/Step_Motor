@@ -323,6 +323,18 @@ void spiAttachTxInterrupt(uint8_t ch, void (*func)())
   p_spi->func_tx = func;
 }
 
+// Wait for bus to become free, then read a byte from a register
+void spiReadRegBuf(uint8_t ch, uint8_t reg, uint8_t *data, uint8_t length)
+{
+	spi_t  *p_spi = &spi_tbl[ch];
+	HAL_SPI_Transmit(p_spi->h_spi, &reg, sizeof(reg), 10);
+	HAL_Delay(3);
+	HAL_SPI_Receive(p_spi->h_spi, data, length, 10);
+
+    // Wait for completion
+	//spiWait(dev);
+}
+
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 {
 	for(uint8_t i = 0; i<SPI_MAX_CH; i++)

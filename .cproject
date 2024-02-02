@@ -87,7 +87,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hw/sd.c|Step_Motor 참고자료|CUBE_MX|src/hw/rtc.c|src/hw/i2c.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/drivers/lvgl|src/hw/sd.c|Step_Motor 참고자료|CUBE_MX|src/hw/rtc.c|src/hw/i2c.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -162,7 +162,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hw/sd.c|Step_Motor 참고자료|CUBE_MX|src/hw/rtc.c|src/hw/i2c.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/drivers/lvgl|src/hw/sd.c|Step_Motor 참고자료|CUBE_MX|src/hw/rtc.c|src/hw/i2c.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

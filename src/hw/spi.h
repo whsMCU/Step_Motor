@@ -61,6 +61,8 @@ bool spiDmaTxTransfer(uint8_t ch, void *buf, uint32_t length, uint32_t timeout);
 bool spiDmaTxIsDone(uint8_t ch);
 void spiAttachTxInterrupt(uint8_t ch, void (*func)());
 
+void spiReadRegBuf(uint8_t ch, uint8_t reg, uint8_t *data, uint8_t length);
+
 #endif
 
 #endif /* SRC_COMMON_HW_INCLUDE_I2C_H_ */
