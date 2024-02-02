@@ -327,9 +327,9 @@ void spiAttachTxInterrupt(uint8_t ch, void (*func)())
 void spiReadRegBuf(uint8_t ch, uint8_t reg, uint8_t *data, uint8_t length)
 {
 	spi_t  *p_spi = &spi_tbl[ch];
-	HAL_SPI_Transmit(p_spi->h_spi, &reg, sizeof(reg), 10);
-	HAL_Delay(3);
-	HAL_SPI_Receive(p_spi->h_spi, data, length, 10);
+	HAL_SPI_Transmit(p_spi->h_spi, &reg, sizeof(reg), 100);
+	HAL_Delay(5);
+	HAL_SPI_Receive(p_spi->h_spi, data, length, 100);
 
     // Wait for completion
 	//spiWait(dev);

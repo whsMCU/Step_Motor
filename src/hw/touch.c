@@ -62,53 +62,52 @@ void Init_touch_param(tft_touch_t *param)
 	param->touchCalibration_invert_x = 2;
 	param->touchCalibration_invert_y = 0;
 }
-
+uint16_t delta(uint16_t a, uint16_t b) { return a > b ? a - b : b - a; }
 /***************************************************************************************
 ** Function name:           getTouchRaw
 ** Description:             read raw touch position.  Always returns true.
 ***************************************************************************************/
 uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
-  uint16_t tmp;
-  uint8_t buf[5];
-  uint32_t sum;
+  uint8_t buf[2] = {0, 0};
+  uint16_t data[3] = {0, 0, 0};
 
   begin_touch_read_write();
 
   // Start YP sample request for x position, read 4 times and keep last sample
 
-  for(int i = 0; i < 5; i++ )
+  for(int i = 0; i < 3; i++)
   {
-  	spiReadRegBuf(_DEF_SPI1, 0xD0, buf, 1);
-  	sum += (uint32_t)buf[i];
+  	spiReadRegBuf(_DEF_SPI1, XPT2046_X, buf, 2);
+  	data[i] = ((buf[0]<<4) | (buf[1]>>4));
   }
+	uint16_t delta01 = delta(data[0], data[1]);
+	uint16_t delta02 = delta(data[0], data[2]);
+	uint16_t delta12 = delta(data[1], data[2]);
 
-  spiTransfer8(_DEF_SPI1, 0xd0);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0xd0);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0xd0);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0xd0);
+	if (delta01 > delta02 || delta01 > delta12) {
+		if (delta02 > delta12)
+			data[0] = data[2];
+		else
+			data[1] = data[2];
+	}
+  *x = (data[0] + data[1]) >> 1;
 
-  tmp = spiTransfer8(_DEF_SPI1, 0);                   // Read first 8 bits
-  tmp = tmp <<5;
-  tmp |= 0x1f & (spiTransfer8(_DEF_SPI1, 0x90)>>3);   // Read last 8 bits and start new XP conversion
+  for(int i = 0; i < 3; i++)
+  {
+  	spiReadRegBuf(_DEF_SPI1, XPT2046_Y, buf, 2);
+  	data[i] = ((buf[0]<<4) | (buf[1]>>4));
+  }
+	delta01 = delta(data[0], data[1]);
+	delta02 = delta(data[0], data[2]);
+	delta12 = delta(data[1], data[2]);
 
-  *x = tmp;
-
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0x90);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0x90);
-  spiTransfer8(_DEF_SPI1, 0);
-  spiTransfer8(_DEF_SPI1, 0x90);
-
-
-  tmp = spiTransfer8(_DEF_SPI1, 0);;                 // Read first 8 bits
-  tmp = tmp <<5;
-  tmp |= 0x1f & (spiTransfer8(_DEF_SPI1, 0)>>3);    // Read last 8 bits
-
-  *y = tmp;
+	if (delta01 > delta02 || delta01 > delta12) {
+		if (delta02 > delta12)
+			data[0] = data[2];
+		else
+			data[1] = data[2];
+	}
+  *y = (data[0] + data[1]) >> 1;
 
   end_touch_read_write();
 
@@ -120,24 +119,29 @@ uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
 ** Description:             read raw pressure on touchpad and return Z value.
 ***************************************************************************************/
 uint16_t getTouchRawZ(void){
-
+  uint8_t buf[2] = {0, 0};
+  uint16_t data[3] = {0, 0, 0};
   begin_touch_read_write();
 
-  // Z sample request
-  int16_t tz = 0xFFF;
-  spiTransfer8(_DEF_SPI1, 0xb0);
-//  spi.transfer(0xb0);               // Start new Z1 conversion
+  for(int i = 0; i < 3; i++)
+  {
+  	spiReadRegBuf(_DEF_SPI1, XPT2046_Z1, buf, 2);
+  	data[i] = ((buf[0]<<4) | (buf[1]>>4));
+  }
+	uint16_t delta01 = delta(data[0], data[1]);
+	uint16_t delta02 = delta(data[0], data[2]);
+	uint16_t delta12 = delta(data[1], data[2]);
 
-  tz += spiTransfer16(_DEF_SPI1, 0xc0) >> 3;  // Read Z1 and start Z2 conversion
-  tz -= spiTransfer16(_DEF_SPI1, 0x00) >> 3;  // Read Z2
-//  tz += spi.transfer16(0xc0) >> 3;  // Read Z1 and start Z2 conversion
-//  tz -= spi.transfer16(0x00) >> 3;  // Read Z2
+	if (delta01 > delta02 || delta01 > delta12) {
+		if (delta02 > delta12)
+			data[0] = data[2];
+		else
+			data[1] = data[2];
+	}
 
   end_touch_read_write();
 
-  if (tz == 4095) tz = 0;
-
-  return (uint16_t)tz;
+  return (data[0] + data[1]) >> 1;
 }
 
 /***************************************************************************************
@@ -389,7 +393,7 @@ void cliTouch(cli_args_t *args)
 
     	cliPrintf("z: %d \r\n     ", getTouchRawZ());
 
-    	delay(250);
+    	delay(100);
     }
     ret = true;
   }
