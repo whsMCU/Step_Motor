@@ -323,55 +323,6 @@ void spiAttachTxInterrupt(uint8_t ch, void (*func)())
   p_spi->func_tx = func;
 }
 
-//void TFT_TransmitDMA(uint32_t MemoryIncrease, uint16_t *Data, uint16_t Count) {
-//	// Wait last dma finish, to start another
-//	SPI_HandleTypeDef *SPIx = spi_dev_tbl[tb_TFT].dev.h_spi;
-//	DMA_HandleTypeDef *DMAtx = spi_dev_tbl[tb_TFT].dev.h_dma_tx;
-//	while (TFT_isBusy()) { /* nada */ }
-//
-//	DMAtx->Init.MemInc = MemoryIncrease;
-//	HAL_DMA_Init(DMAtx);
-//
-//	//DataTransferBegin();
-//
-//	HAL_DMA_Start(DMAtx, (uint32_t)Data, (uint32_t)&(SPIx->Instance->DR), Count);
-//	__HAL_SPI_ENABLE(SPIx);
-//
-//	SET_BIT(SPIx->Instance->CR2, SPI_CR2_TXDMAEN);   // Enable Tx DMA Request
-//
-//	HAL_DMA_PollForTransfer(DMAtx, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-//
-//	TFT_Abort();
-//}
-//
-//bool TFT_isBusy()
-//{
-//	DMA_HandleTypeDef *DMAtx = spi_dev_tbl[tb_TFT].dev.h_dma_tx;
-//
-//	volatile bool dmaEnabled = DMAtx->Instance->CR & DMA_SxCR_EN;
-//	if (dmaEnabled) {
-//    if (__HAL_DMA_GET_FLAG(DMAtx, __HAL_DMA_GET_TC_FLAG_INDEX(DMAtx)) != 0 || __HAL_DMA_GET_FLAG(DMAtx, __HAL_DMA_GET_TE_FLAG_INDEX(DMAtx)) != 0)
-//      TFT_Abort();
-//	}else
-//    TFT_Abort();
-//  return dmaEnabled;
-//}
-//
-//void TFT_Abort() {
-//	DMA_HandleTypeDef *DMAtx = spi_dev_tbl[tb_TFT].dev.h_dma_tx;
-//	SPI_HandleTypeDef *SPIx = spi_dev_tbl[tb_TFT].dev.h_spi;
-//	// Wait for any running spi
-//	while ((SPIx->Instance->SR & SPI_FLAG_TXE) != SPI_FLAG_TXE) {}
-//	while ((SPIx->Instance->SR & SPI_FLAG_BSY) == SPI_FLAG_BSY) {}
-//	// First, abort any running dma
-//	HAL_DMA_Abort(DMAtx);
-//	// DeInit objects
-//	HAL_DMA_DeInit(DMAtx);
-//	HAL_SPI_DeInit(SPIx);
-//	// Deselect CS
-//	gpioPinWrite(TFT_CS, _DEF_HIGH);
-//}
-
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 {
 	for(uint8_t i = 0; i<SPI_MAX_CH; i++)

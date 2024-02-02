@@ -61,10 +61,6 @@ bool spiDmaTxTransfer(uint8_t ch, void *buf, uint32_t length, uint32_t timeout);
 bool spiDmaTxIsDone(uint8_t ch);
 void spiAttachTxInterrupt(uint8_t ch, void (*func)());
 
-void TFT_TransmitDMA(uint32_t MemoryIncrease, uint16_t *Data, uint16_t Count);
-bool TFT_isBusy();
-void TFT_Abort();
-
 #endif
 
 #endif /* SRC_COMMON_HW_INCLUDE_I2C_H_ */
