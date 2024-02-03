@@ -70,6 +70,7 @@ uint16_t delta(uint16_t a, uint16_t b) { return a > b ? a - b : b - a; }
 uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
   uint8_t buf[2] = {0, 0};
   uint16_t data[3] = {0, 0, 0};
+  uint16_t tmp;
 
   begin_touch_read_write();
 
@@ -78,7 +79,8 @@ uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
   for(int i = 0; i < 3; i++)
   {
   	spiReadRegBuf(_DEF_SPI1, XPT2046_X, buf, 2);
-  	data[i] = ((buf[0]<<4) | (buf[1]>>4));
+  	tmp = (buf[1] << 5);
+  	data[i] = (tmp | (buf[0]>>3));
   }
 	uint16_t delta01 = delta(data[0], data[1]);
 	uint16_t delta02 = delta(data[0], data[2]);
@@ -95,7 +97,8 @@ uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
   for(int i = 0; i < 3; i++)
   {
   	spiReadRegBuf(_DEF_SPI1, XPT2046_Y, buf, 2);
-  	data[i] = ((buf[0]<<4) | (buf[1]>>4));
+  	tmp = (buf[1] << 5);
+  	data[i] = (tmp | (buf[0]>>3));
   }
 	delta01 = delta(data[0], data[1]);
 	delta02 = delta(data[0], data[2]);
@@ -120,28 +123,23 @@ uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
 ***************************************************************************************/
 uint16_t getTouchRawZ(void){
   uint8_t buf[2] = {0, 0};
-  uint16_t data[3] = {0, 0, 0};
+  int16_t tmp;
+  // Z sample request
+  int16_t tz = 0xFFF;
   begin_touch_read_write();
 
-  for(int i = 0; i < 3; i++)
-  {
-  	spiReadRegBuf(_DEF_SPI1, XPT2046_Z1, buf, 2);
-  	data[i] = ((buf[0]<<4) | (buf[1]>>4));
-  }
-	uint16_t delta01 = delta(data[0], data[1]);
-	uint16_t delta02 = delta(data[0], data[2]);
-	uint16_t delta12 = delta(data[1], data[2]);
-
-	if (delta01 > delta02 || delta01 > delta12) {
-		if (delta02 > delta12)
-			data[0] = data[2];
-		else
-			data[1] = data[2];
-	}
+  spiReadRegBuf(_DEF_SPI1, XPT2046_Z1, buf, 2);
+  tmp = (buf[1] << 5);
+  tz += (int16_t)(tmp | (buf[0]>>3));
+  spiReadRegBuf(_DEF_SPI1, XPT2046_Z2, buf, 2);
+  tmp = (buf[1] << 5);
+  tz -= (int16_t)(tmp | (buf[0]>>3));
 
   end_touch_read_write();
 
-  return (data[0] + data[1]) >> 1;
+  if (tz == 4095) tz = 0;
+
+  return (uint16_t)tz;
 }
 
 /***************************************************************************************

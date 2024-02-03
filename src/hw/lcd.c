@@ -102,10 +102,10 @@ bool lcdInit(void)
 //
 //	p_draw_frame_buf = frame_buffer[frame_index];
 
-	lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_GREEN);
+	//lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_GREEN);
 
-	//lcdDrawFillRect(0, 0, lcd._width, lcd._height, TFT_GREEN);
-	//lcdUpdateDraw();
+//	lcdDrawFillRect(0, 0, lcd._width, lcd._height, TFT_RED);
+//	lcdUpdateDraw();
 
 	lcdSetBackLight(100);
 
@@ -174,9 +174,10 @@ static void WriteMultiple(uint32_t Color, uint32_t Count) {
 
   Data = (uint16_t)Color;
   spiSetBitWidth(_DEF_SPI1, 16);
+  TFT_DC_D;
   TFT_CS_L;
   while (Count > 0) {
-  	spiDmaTxStart(0, (uint8_t*)&Data, Count > 0xFFFF ? 0xFFFF : Count);
+  	if(spiDmaTxTransfer(_DEF_SPI1, (void*)&Data, Count > 0xFFFF ? 0xFFFF : Count, 100) != true);
     Count = Count > 0xFFFF ? Count - 0xFFFF : 0;
   }
   TFT_CS_H;
@@ -187,9 +188,9 @@ LCD_OPT_DEF void lcdClear(uint32_t rgb_code)
 //  lcdClearBuffer(rgb_code);
 //
 //  lcdUpdateDraw();
-
   lcd.setWindow(0, 0, lcd._width-1, lcd._height-1);
   WriteMultiple(rgb_code, (uint32_t)lcd._width * (uint32_t)lcd._height);
+
 }
 
 LCD_OPT_DEF void lcdClearBuffer(uint32_t rgb_code)

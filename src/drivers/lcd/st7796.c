@@ -82,7 +82,7 @@ bool st7796Reset(void)
 
   st7796SetRotation(1);
   st7796FillRect(0, 0, HW_LCD_WIDTH, HW_LCD_HEIGHT, TFT_BLACK);
-  TFT_BKL_L;
+
   return true;
 }
 
@@ -336,8 +336,8 @@ void st7796FillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color)
   st7796SetWindow(x, y, x + w - 1, y + h - 1);
   spiSetBitWidth(spi_ch, 16);
 
-  TFT_DC_D
-  TFT_CS_L
+  TFT_DC_D;
+  TFT_CS_L;
 
   for (int i=0; i<w; i++)
   {
@@ -359,8 +359,8 @@ bool st7796SendBuffer(uint8_t *p_data, uint32_t length, uint32_t timeout_ms)
 
   spiSetBitWidth(spi_ch, 16);
 
-  TFT_DC_D
-  TFT_CS_L
+  TFT_DC_D;
+  TFT_CS_L;
 
   spiDmaTxTransfer(_DEF_SPI1, (void *)p_data, length, 0);
   return true;
