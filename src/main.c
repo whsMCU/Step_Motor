@@ -153,7 +153,7 @@ void mainUi(void)
 {
   // Fill screen with random colour so we can see the effect of printing with and without
   // a background colour defined
-	lcdClear(TFT_BLUE);
+//	lcdClear(TFT_BLUE);
 //  HAL_Delay(500);
 //  lcdClear(TFT_NAVY);
 //  HAL_Delay(500);

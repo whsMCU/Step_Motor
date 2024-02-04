@@ -13,6 +13,7 @@
 
 #include "hangul/han.h"
 #include "lcd/lcd_fonts.h"
+#include "image/graphic.h"
 
 #ifdef _USE_HW_LCD
 
@@ -102,7 +103,9 @@ bool lcdInit(void)
 //
 //	p_draw_frame_buf = frame_buffer[frame_index];
 
-	//lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_GREEN);
+	lcd.fillRect(0, 0, lcd._width, lcd._height, 0xAD75);
+
+	drawBitmap(0, 0, (const uint8_t *)background, 320, 240, 0xA815);
 
 //	lcdDrawFillRect(0, 0, lcd._width, lcd._height, TFT_RED);
 //	lcdUpdateDraw();
@@ -644,6 +647,73 @@ void lcdDrawBufferImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const ui
 			lcdDrawPixel(j, i, data[pixel_cnt++]);
 		}
     }
+}
+
+#define pgm_read_byte(addr)   (*(const unsigned char *)(addr))
+
+void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color)
+{
+  int32_t i, j, byteWidth = (w + 7) / 8;
+
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++ ) {
+      if (pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
+        drawPixel(x + i, y + j, color);
+      }
+    }
+  }
+  TFT_CS_H;
+}
+
+static void lcd_writecommand(uint8_t c)
+{
+	TFT_DC_C;
+	TFT_CS_L;
+
+	spiTransfer8(_DEF_SPI1, c);
+
+	TFT_CS_H;
+}
+
+static void lcd_writedata(uint8_t d)
+{
+	TFT_DC_D;        // Play safe, but should already be in data mode
+	TFT_CS_L;
+
+	spiTransfer8(_DEF_SPI1, d);
+
+	TFT_CS_H;
+}
+
+static void lcd_writedata_16(uint16_t d)
+{
+	TFT_DC_D;        // Play safe, but should already be in data mode
+	TFT_CS_L;
+
+	spiTransfer16(_DEF_SPI1, d);
+
+	TFT_CS_H;
+}
+
+void drawPixel(int32_t x, int32_t y, uint32_t color)
+{
+  TFT_CS_L;
+
+  lcd_writecommand(TFT_CASET);
+  lcd_writedata((x >> 8) & 0xFF);
+  lcd_writedata(x & 0xFF);
+
+	lcd_writecommand(TFT_PASET);
+	lcd_writedata((y >> 8) & 0xFF);
+	lcd_writedata(y & 0xFF);
+
+	lcd_writecommand(TFT_RAMWR); // write to RAM
+
+  spiSetBitWidth(_DEF_SPI1, 16);
+
+  lcd_writedata_16(color);
+	spiSetBitWidth(_DEF_SPI1, 8);
+  TFT_CS_H;
 }
 
 void lcdDrawFillScreen(uint16_t color)

@@ -350,6 +350,7 @@ void st7796FillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color)
       break;
     }
   }
+  spiSetBitWidth(spi_ch, 8);
   TFT_CS_H;
 }
 
