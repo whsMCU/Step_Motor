@@ -1,0 +1,5 @@
+../src/main.c:71:5:main	1
+../src/main.c:129:6:hwInit	1
+../src/main.c:156:6:mainUi	1
+../src/main.c:174:6:SystemClock_Config	3
+../src/main.c:223:6:Error_Handler	1

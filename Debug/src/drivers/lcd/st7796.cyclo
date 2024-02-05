@@ -1,0 +1,14 @@
+../src/drivers/lcd/st7796.c:26:13:TransferDoneISR	3
+../src/drivers/lcd/st7796.c:41:6:st7796Init	1
+../src/drivers/lcd/st7796.c:50:6:st7796InitDriver	1
+../src/drivers/lcd/st7796.c:67:6:st7796Reset	1
+../src/drivers/lcd/st7796.c:87:10:st7796GetWidth	1
+../src/drivers/lcd/st7796.c:92:10:st7796GetHeight	1
+../src/drivers/lcd/st7796.c:97:6:writecommand	1
+../src/drivers/lcd/st7796.c:107:6:writedata	1
+../src/drivers/lcd/st7796.c:117:6:st7796InitRegs	1
+../src/drivers/lcd/st7796.c:217:6:st7796SetRotation	9
+../src/drivers/lcd/st7796.c:297:6:st7796SetWindow	1
+../src/drivers/lcd/st7796.c:323:6:st7796FillRect	12
+../src/drivers/lcd/st7796.c:360:6:st7796SendBuffer	1
+../src/drivers/lcd/st7796.c:373:6:st7796SetCallBack	1

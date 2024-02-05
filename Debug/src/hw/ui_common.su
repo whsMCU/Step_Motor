@@ -1,0 +1,2 @@
+../src/hw/ui_common.c:11:6:draw_fan_status	32	static
+../src/hw/ui_common.c:30:6:get_blink	16	static

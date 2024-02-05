@@ -1,0 +1,16 @@
+../src/hw/uart.c:30:6:uartInit	2
+../src/hw/uart.c:40:6:uartOpen	5
+../src/hw/uart.c:203:10:uartAvailable	3
+../src/hw/uart.c:241:9:uartRead	7
+../src/hw/uart.c:275:10:uartWrite	12
+../src/hw/uart.c:331:10:uartWriteIT	13
+../src/hw/uart.c:390:6:serialPrint	2
+../src/hw/uart.c:398:10:uartPrintf	1
+../src/hw/uart.c:416:10:uartPrintf_IT	1
+../src/hw/uart.c:434:10:uartGetBaud	3
+../src/hw/uart.c:469:6:uartSetBaud	4
+../src/hw/uart.c:545:12:lookupBaudRateIndex	3
+../src/hw/uart.c:558:6:HAL_UART_ErrorCallback	1
+../src/hw/uart.c:567:6:HAL_UARTEx_RxEventCallback	1
+../src/hw/uart.c:586:6:HAL_UART_MspInit	4
+../src/hw/uart.c:655:6:HAL_UART_MspDeInit	2
