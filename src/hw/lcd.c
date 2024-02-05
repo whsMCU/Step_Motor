@@ -13,7 +13,6 @@
 
 #include "hangul/han.h"
 #include "lcd/lcd_fonts.h"
-#include "image/graphic.h"
 
 #ifdef _USE_HW_LCD
 
@@ -94,17 +93,12 @@ bool lcdInit(void)
 
 	lcd.setCallBack(TransferDoneISR);
 
-	for (int i=0; i<lcd._width; i++)
-	{
-		frame_buffer[0][i] = TFT_BLACK;
-		frame_buffer[1][i] = TFT_BLACK;
-	}
-	memset(frame_buffer, 0x00, sizeof(frame_buffer));
 
+	memset(frame_buffer, 0x00, sizeof(frame_buffer));
 	p_draw_frame_buf = frame_buffer[frame_index];
 
-//	lcd.fillRect(0, 0, lcd._width, lcd._height, 0xAD75);
-//	drawBitmap(0, 0, (const uint8_t *)background, 320, 240, 0xA815);
+	lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_BLACK);
+//	drawBitmap(0, 0, (const uint8_t *)background, 320, 240, TFT_RED);
 
 //	lcdDrawFillRect(0, 0, lcd._width, lcd._height, TFT_RED);
 //	lcdUpdateDraw();
@@ -516,10 +510,12 @@ void lcdDrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
   {
     if (steep)
     {
-      lcdDrawPixel(y0, x0, color);
+      //lcdDrawPixel(y0, x0, color);
+      drawPixel(y0, x0, color);
     } else
     {
-      lcdDrawPixel(x0, y0, color);
+      //lcdDrawPixel(x0, y0, color);
+      drawPixel(y0, x0, color);
     }
     err -= dy;
     if (err < 0)
@@ -664,55 +660,28 @@ void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t 
   TFT_CS_H;
 }
 
-static void lcd_writecommand(uint8_t c)
-{
-	TFT_DC_C;
-	TFT_CS_L;
-
-	spiTransfer8(_DEF_SPI1, c);
-
-	TFT_CS_H;
-}
-
-static void lcd_writedata(uint8_t d)
-{
-	TFT_DC_D;        // Play safe, but should already be in data mode
-	TFT_CS_L;
-
-	spiTransfer8(_DEF_SPI1, d);
-
-	TFT_CS_H;
-}
-
-static void lcd_writedata_16(uint16_t d)
-{
-	TFT_DC_D;        // Play safe, but should already be in data mode
-	TFT_CS_L;
-
-	spiTransfer16(_DEF_SPI1, d);
-
-	TFT_CS_H;
-}
-
 void drawPixel(int32_t x, int32_t y, uint32_t color)
 {
   TFT_CS_L;
 
-  lcd_writecommand(TFT_CASET);
-  lcd_writedata((x >> 8) & 0xFF);
-  lcd_writedata(x & 0xFF);
+  writecommand(TFT_CASET);
+  writedata((x >> 8) & 0xFF);
+  writedata(x & 0xFF);
 
-  lcd_writecommand(TFT_PASET);
-  lcd_writedata((y >> 8) & 0xFF);
-  lcd_writedata(y & 0xFF);
+  writecommand(TFT_PASET);
+  writedata((y >> 8) & 0xFF);
+  writedata(y & 0xFF);
 
-  lcd_writecommand(TFT_RAMWR); // write to RAM
+  writecommand(TFT_RAMWR); // write to RAM
 
   spiSetBitWidth(_DEF_SPI1, 16);
 
-  lcd_writedata_16(color);
-	spiSetBitWidth(_DEF_SPI1, 8);
+	TFT_DC_D;        // Play safe, but should already be in data mode
+	TFT_CS_L;
+	spiTransfer16(_DEF_SPI1, color);
   TFT_CS_H;
+	spiSetBitWidth(_DEF_SPI1, 8);
+
 }
 
 void lcdDrawFillScreen(uint16_t color)
@@ -841,7 +810,7 @@ void disHanFont(int x, int y, han_font_t *FontPtr, uint16_t textcolor)
       {
         if( (font_data<<Loop) & (0x80))
         {
-          lcdDrawPixel(x + index_x, y + i, textcolor);
+        	drawPixel(x + index_x, y + i, textcolor);
         }
         index_x++;
       }
@@ -862,7 +831,7 @@ void disEngFont(int x, int y, char ch, lcd_font_t *font, uint16_t textcolor)
     {
       if ((b << j) & 0x8000)
       {
-        lcdDrawPixel(x + j, (y + i), textcolor);
+      	drawPixel(x + j, (y + i), textcolor);
       }
     }
   }

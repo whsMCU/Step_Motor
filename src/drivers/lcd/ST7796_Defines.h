@@ -98,7 +98,7 @@
 
 #define ST7796_GMCTRP1 0xE0
 #define ST7796_GMCTRN1 0xE1
-#define ST7796_DOCA	   0xE1
+#define ST7796_DOCA	   0xE8
 
 #define ST7796_CSCON   0xF0
 

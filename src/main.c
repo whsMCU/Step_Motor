@@ -55,6 +55,8 @@
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void mainUi(void);
+
+uint32_t startTime = 0; // For frames-per-second estimate
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -86,6 +88,8 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   hwInit();
+
+  startTime = micros();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -151,24 +155,16 @@ void hwInit(void)
 
 void mainUi(void)
 {
-  // Fill screen with random colour so we can see the effect of printing with and without
-  // a background colour defined
-//	lcdClear(TFT_BLUE);
-//  HAL_Delay(500);
-//  lcdClear(TFT_NAVY);
-//  HAL_Delay(500);
-//  lcdClear(TFT_GREEN);
-//  HAL_Delay(500);
 
-  // Set "cursor" at top left corner of display (0,0) and select font 2
-  // (cursor will move to next line automatically during printing with 'tft.println'
-  //  or stay on the line is there is room for the text with tft.print)
-//  setCursor_1(0, 0, 2);
-  // Set the font colour to be white with a black background, set text size multiplier to 1
-//  setTextColor_1(TFT_WHITE, TFT_BLACK, false);
-//  setTextSize(1);
-  // We can now plot text on screen using the "print" class
-  //println("Hello World!");
+	lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
+
+	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
+
+	lcdPrintf(25,16*3, TFT_BLUE, "[LCD 테스트]");
+
+	lcdPrintf(25,16*7, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
+	lcdDrawFillRect(25, 16*7, 100, 20, TFT_NAVY);
+	startTime = micros();
 }
 
 /**

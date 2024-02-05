@@ -17,8 +17,6 @@ volatile static bool  is_write_frame = false;
 const uint32_t colstart = 0;
 const uint32_t rowstart = 0;
 
-static void writecommand(uint8_t c);
-static void writedata(uint8_t d);
 static void st7796InitRegs(void);
 static void st7796FillRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color);
 static void st7796SetRotation(uint8_t m);
@@ -139,6 +137,11 @@ void st7796InitRegs(void)
 
 	writecommand(ST7796_INVCTR);//Display Inversion Cotnrol
 	writedata(0x01);			//1-dot inversion
+
+	writecommand(ST7796_DFUNCTR); //Display Function Control
+	writedata(0x80);    //Bypass
+	writedata(0x02);    //Source Output Scan from S1 to S960, Gate Output scan from G1 to G480, scan cycle=2
+	writedata(0x3B);    //LCD Drive Line=8*(59+1)
 
 	writecommand(ST7796_EM);	//Entry Mode Set
 	writedata(0xC6);

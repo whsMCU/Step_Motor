@@ -24,6 +24,10 @@ uint32_t st7796GetFpsTime(void);
 uint16_t st7796GetWidth(void);
 uint16_t st7796GetHeight(void);
 
+void writecommand(uint8_t c);
+
+void writedata(uint8_t d);
+
 bool st7796SetCallBack(void (*p_func)(void));
 bool st7796SendBuffer(uint8_t *p_data, uint32_t length, uint32_t timeout_ms);
 bool st7796DrawBuffer(int16_t x, int16_t y, uint16_t *buffer, uint16_t w, uint16_t h);
