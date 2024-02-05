@@ -1,2 +1,0 @@
-../src/hw/encoder.c:16:14:get_encoder_state	16	static
-../src/hw/encoder.c:27:14:Encoder_ReceiveAnalyze	48	static
