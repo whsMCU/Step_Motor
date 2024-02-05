@@ -51,7 +51,7 @@ static volatile uint32_t draw_frame_time = 0;
 
 
 static uint16_t *p_draw_frame_buf = NULL;
-static uint16_t __attribute__((aligned(64))) frame_buffer[1][TFT_BUFFER_SIZE];
+static uint16_t __attribute__((aligned(64))) frame_buffer[2][HW_LCD_WIDTH];
 
 static lcd_font_t *font_tbl[LCD_FONT_MAX] = { &font_07x10, &font_11x18, &font_16x26, &font_hangul};
 
@@ -91,21 +91,20 @@ bool lcdInit(void)
 
 	st7796InitDriver(&lcd);
 	is_init = st7796Init();
-	//st7796InitDriver(&lcd);
 
 	lcd.setCallBack(TransferDoneISR);
 
-//	for (int i=0; i<lcd._width*lcd._height; i++)
-//	{
-//		frame_buffer[0][i] = TFT_BLACK;
-//	}
-//	memset(frame_buffer, 0x00, sizeof(frame_buffer));
-//
-//	p_draw_frame_buf = frame_buffer[frame_index];
+	for (int i=0; i<lcd._width; i++)
+	{
+		frame_buffer[0][i] = TFT_BLACK;
+		frame_buffer[1][i] = TFT_BLACK;
+	}
+	memset(frame_buffer, 0x00, sizeof(frame_buffer));
 
-	lcd.fillRect(0, 0, lcd._width, lcd._height, 0xAD75);
+	p_draw_frame_buf = frame_buffer[frame_index];
 
-	drawBitmap(0, 0, (const uint8_t *)background, 320, 240, 0xA815);
+//	lcd.fillRect(0, 0, lcd._width, lcd._height, 0xAD75);
+//	drawBitmap(0, 0, (const uint8_t *)background, 320, 240, 0xA815);
 
 //	lcdDrawFillRect(0, 0, lcd._width, lcd._height, TFT_RED);
 //	lcdUpdateDraw();
@@ -703,11 +702,11 @@ void drawPixel(int32_t x, int32_t y, uint32_t color)
   lcd_writedata((x >> 8) & 0xFF);
   lcd_writedata(x & 0xFF);
 
-	lcd_writecommand(TFT_PASET);
-	lcd_writedata((y >> 8) & 0xFF);
-	lcd_writedata(y & 0xFF);
+  lcd_writecommand(TFT_PASET);
+  lcd_writedata((y >> 8) & 0xFF);
+  lcd_writedata(y & 0xFF);
 
-	lcd_writecommand(TFT_RAMWR); // write to RAM
+  lcd_writecommand(TFT_RAMWR); // write to RAM
 
   spiSetBitWidth(_DEF_SPI1, 16);
 
