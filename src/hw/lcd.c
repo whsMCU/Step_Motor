@@ -684,6 +684,20 @@ void drawPixel(int32_t x, int32_t y, uint32_t color)
 
 }
 
+void pushPixelsDMA(uint16_t* image, uint32_t len)
+{
+  if (len == 0) return;
+
+  // Wait for any current DMA transaction to end
+  while (hspi1.State == HAL_SPI_STATE_BUSY_TX); // Check if SPI Tx is busy
+
+//  if(_swapBytes) {
+//    for (uint32_t i = 0; i < len; i++) (image[i] = image[i] << 8 | image[i] >> 8);
+//  }
+
+  spiDmaTxStart(_DEF_SPI1, (uint8_t*)image, len << 1);
+}
+
 void lcdDrawFillScreen(uint16_t color)
 {
   lcdDrawFillRect(0, 0, lcd._width, lcd._height, color);
