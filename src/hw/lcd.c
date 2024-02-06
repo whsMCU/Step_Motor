@@ -50,7 +50,7 @@ static volatile uint32_t draw_frame_time = 0;
 
 
 static uint16_t *p_draw_frame_buf = NULL;
-static uint16_t __attribute__((aligned(64))) frame_buffer[2][HW_LCD_WIDTH];
+static uint16_t __attribute__((aligned(64))) frame_buffer[2][14400];
 
 static lcd_font_t *font_tbl[LCD_FONT_MAX] = { &font_07x10, &font_11x18, &font_16x26, &font_hangul};
 
