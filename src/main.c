@@ -157,15 +157,15 @@ void hwInit(void)
 void mainUi(void)
 {
 
-	lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
-
-	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
-
-	lcdPrintf(25,16*3, TFT_BLUE, "[LCD 테스트]");
-
-	lcdPrintf(25,16*7, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
-	lcdDrawFillRect(25, 16*7, 100, 20, TFT_NAVY);
-	startTime = micros();
+//	lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
+//
+//	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
+//
+//	lcdPrintf(25,16*3, TFT_BLUE, "[LCD 테스트]");
+//
+//	lcdPrintf(25,16*7, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
+//	lcdDrawFillRect(25, 16*7, 100, 20, TFT_NAVY);
+//	startTime = micros();
 }
 
 /**
