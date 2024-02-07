@@ -39,6 +39,7 @@ enum
 	TFT_BKL,
 	Toutch_CS,
 	BEEPER,
+	FLASH_CS,
 };
 
 

@@ -31,8 +31,10 @@
 #define SPI_SPEED_CLOCK_DIV256_MHZ  ((uint32_t)256)
 
 extern SPI_HandleTypeDef hspi1;
+extern SPI_HandleTypeDef hspi2;
 extern DMA_HandleTypeDef hdma_spi1_rx;
 extern DMA_HandleTypeDef hdma_spi1_tx;
+extern DMA_HandleTypeDef hdma_spi2_rx;
 
 typedef enum {
     BUS_READY,
@@ -62,6 +64,7 @@ bool spiDmaTxIsDone(uint8_t ch);
 void spiAttachTxInterrupt(uint8_t ch, void (*func)());
 
 void spiReadRegBuf(uint8_t ch, uint8_t reg, uint8_t *data, uint8_t length);
+void spiDmaTxRxStart(uint8_t ch, uint8_t *p_txbuf, uint8_t *p_rxbuf, uint16_t length);
 
 #endif
 

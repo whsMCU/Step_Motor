@@ -142,6 +142,7 @@ void hwInit(void)
   spiInit();
 
   lcdInit();
+  LCD_Draw_Logo();
 
   touch_init();
 

@@ -147,6 +147,11 @@ void lcdPrintf(int x, int y, uint16_t color,  const char *fmt, ...);
 void lcdSetFont(LcdFont font);
 LcdFont lcdGetFont(void);
 
+void LCD_Draw_Logo(void);
+
+void WriteSequence(uint16_t *Data, uint16_t Count);
+void WriteMultiple(uint16_t Color, uint32_t Count);
+
 void lcdDrawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t* data);
 void lcdDrawBufferImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t* data);
 void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);

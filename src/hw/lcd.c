@@ -13,6 +13,7 @@
 
 #include "hangul/han.h"
 #include "lcd/lcd_fonts.h"
+#include "image/source/bootscreen_480x320x16.h"
 
 #ifdef _USE_HW_LCD
 
@@ -51,6 +52,9 @@ static volatile uint32_t draw_frame_time = 0;
 
 static uint16_t *p_draw_frame_buf = NULL;
 static uint16_t __attribute__((aligned(64))) frame_buffer[2][14400];
+
+#define LOGO_MAX_SIZE_TFT35             (300 * 1024)
+uint8_t bmp_public_buf[14 * 1024];
 
 static lcd_font_t *font_tbl[LCD_FONT_MAX] = { &font_07x10, &font_11x18, &font_16x26, &font_hangul};
 
@@ -116,6 +120,25 @@ bool lcdInit(void)
 
 	return true;
 }
+
+uint32_t logo_addroffset = 0;
+void Pic_Logo_Read(uint8_t *LogoName, uint8_t *Logo_Rbuff, uint32_t LogoReadsize) {
+  //W25QXX.init(SPI_FULL_SPEED);
+  //W25QXX.SPI_FLASH_BufferRead(Logo_Rbuff, PIC_LOGO_ADDR + logo_addroffset, LogoReadsize);
+  memcpy(Logo_Rbuff, &marlin_logo_480x320x16, LogoReadsize);
+  logo_addroffset += LogoReadsize;
+  if (logo_addroffset >= LOGO_MAX_SIZE_TFT35)
+    logo_addroffset = 0;
+}
+
+void LCD_Draw_Logo(void)
+{
+    lcd.setWindow(0, 0, lcd._width-1, lcd._height-1);
+    for (uint16_t i = 0; i < (lcd._height); i++) {
+      Pic_Logo_Read((uint8_t *)"", (uint8_t *)bmp_public_buf, (lcd._width) * 2);
+      WriteSequence((uint16_t *)bmp_public_buf, lcd._width);
+    }
+}
 uint32_t lcdGetDrawTime(void)
 {
   return draw_frame_time;
@@ -165,15 +188,29 @@ LCD_OPT_DEF void lcdDrawPixel(uint16_t x_pos, uint16_t y_pos, uint32_t rgb_code)
   p_draw_frame_buf[y_pos * lcd._width + x_pos] = rgb_code;
 }
 
-static void WriteMultiple(uint32_t Color, uint32_t Count) {
+void WriteSequence(uint16_t *Data, uint16_t Count)
+{
+  spiSetBitWidth(_DEF_SPI1, 16);
+  TFT_DC_D;
+  TFT_CS_L;
+  HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *) &Data, Count);
+
+  while ((hspi1.Instance->SR & SPI_FLAG_TXE) != SPI_FLAG_TXE) {}
+  while ((hspi1.Instance->SR & SPI_FLAG_BSY) == SPI_FLAG_BSY) {}
+
+  TFT_CS_H;
+}
+
+void WriteMultiple(uint16_t Color, uint32_t Count)
+{
   static uint16_t Data;
 
-  Data = (uint16_t)Color;
+  Data = Color;
   spiSetBitWidth(_DEF_SPI1, 16);
   TFT_DC_D;
   TFT_CS_L;
   while (Count > 0) {
-  	if(spiDmaTxTransfer(_DEF_SPI1, (void*)&Data, Count > 0xFFFF ? 0xFFFF : Count, 100) != true);
+  	if(spiDmaTxTransfer(_DEF_SPI1, (void*)&Data, Count > 0xFFFF ? 0xFFFF : Count, 100) != true)
     Count = Count > 0xFFFF ? Count - 0xFFFF : 0;
   }
   TFT_CS_H;
