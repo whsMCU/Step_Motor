@@ -125,7 +125,7 @@ uint32_t logo_addroffset = 0;
 void Pic_Logo_Read(uint8_t *LogoName, uint8_t *Logo_Rbuff, uint32_t LogoReadsize) {
   //W25QXX.init(SPI_FULL_SPEED);
   //W25QXX.SPI_FLASH_BufferRead(Logo_Rbuff, PIC_LOGO_ADDR + logo_addroffset, LogoReadsize);
-  memcpy(Logo_Rbuff, &marlin_logo_480x320x16, LogoReadsize);
+  memcpy(Logo_Rbuff, marlin_logo_480x320x16 + logo_addroffset, LogoReadsize);
   logo_addroffset += LogoReadsize;
   if (logo_addroffset >= LOGO_MAX_SIZE_TFT35)
     logo_addroffset = 0;
@@ -135,7 +135,7 @@ void LCD_Draw_Logo(void)
 {
     lcd.setWindow(0, 0, lcd._width-1, lcd._height-1);
     for (uint16_t i = 0; i < (lcd._height); i++) {
-      Pic_Logo_Read((uint8_t *)"", (uint8_t *)bmp_public_buf, (lcd._width) * 2);
+      Pic_Logo_Read((uint8_t *)"", (uint8_t *)bmp_public_buf, (lcd._width)*2);
       WriteSequence((uint16_t *)bmp_public_buf, lcd._width);
     }
 }
@@ -190,17 +190,10 @@ LCD_OPT_DEF void lcdDrawPixel(uint16_t x_pos, uint16_t y_pos, uint32_t rgb_code)
 
 void WriteSequence(uint16_t *Data, uint16_t Count)
 {
-  while ((hspi1.Instance->SR & SPI_FLAG_TXE) != SPI_FLAG_TXE) {}
-  while ((hspi1.Instance->SR & SPI_FLAG_BSY) == SPI_FLAG_BSY) {}
   spiSetBitWidth(_DEF_SPI1, 16);
   TFT_DC_D;
   TFT_CS_L;
-  HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *) &Data, Count);
-//  HAL_DMA_Start(&hdma_spi1_tx, (uint32_t)Data, (uint32_t)&(hspi1.Instance->DR), Count);
-//  __HAL_SPI_ENABLE(&hspi1);
-//  HAL_DMA_PollForTransfer(&hdma_spi1_tx, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
-  while ((hspi1.Instance->SR & SPI_FLAG_TXE) != SPI_FLAG_TXE) {}
-  while ((hspi1.Instance->SR & SPI_FLAG_BSY) == SPI_FLAG_BSY) {}
+  spiDmaTxTransfer(_DEF_SPI1, (void*)Data, Count, 100);
 
   TFT_CS_H;
 }

@@ -77,7 +77,8 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -142,7 +143,6 @@ void hwInit(void)
   spiInit();
 
   lcdInit();
-  LCD_Draw_Logo();
 
   touch_init();
 
@@ -156,16 +156,15 @@ void hwInit(void)
 
 void mainUi(void)
 {
-
+  LCD_Draw_Logo();
 //	lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
-//
+
 //	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
-//
-//	lcdPrintf(25,16*3, TFT_BLUE, "[LCD 테스트]");
-//
-//	lcdPrintf(25,16*7, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
-//	lcdDrawFillRect(25, 16*7, 100, 20, TFT_NAVY);
-//	startTime = micros();
+
+	lcdPrintf(25,16*10, TFT_BLUE, "[LCD 테스트]");
+
+	lcdPrintf(25,16*15, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
+	startTime = micros();
 }
 
 /**
