@@ -13,6 +13,10 @@
 #define Toutch_CS_L 		gpioPinWrite(Toutch_CS,  _DEF_LOW);
 #define Toutch_CS_H 		gpioPinWrite(Toutch_CS,  _DEF_HIGH);
 
+#define TOUCH_ORIENTATION_NONE  0
+#define TOUCH_LANDSCAPE         1
+#define TOUCH_PORTRAIT          2
+
 #ifndef TOUCH_CALIBRATION_X
 	#define TOUCH_CALIBRATION_X           -17253
 #endif
@@ -29,17 +33,21 @@
 	#define TOUCH_ORIENTATION    TOUCH_LANDSCAPE
 #endif
 
+#define BUTTON_DELAY_EDIT  50 // (ms) Button repeat delay for edit screens
+#define BUTTON_DELAY_MENU 250 // (ms) Button repeat delay for menus
+
 
 #define XPT2046_DFR_MODE        0x00
 #define XPT2046_SER_MODE        0x04
 #define XPT2046_CONTROL         0x80
 
 
-#define XPT2046_X  (0x18 | XPT2046_CONTROL | XPT2046_DFR_MODE)
-#define XPT2046_Y  (0x58 | XPT2046_CONTROL | XPT2046_DFR_MODE)
-#define XPT2046_Z1 (0x38 | XPT2046_CONTROL | XPT2046_DFR_MODE)
-#define XPT2046_Z2 (0x48 | XPT2046_CONTROL | XPT2046_DFR_MODE)
+#define XPT2046_X  (0x10 | XPT2046_CONTROL | XPT2046_DFR_MODE)
+#define XPT2046_Y  (0x50 | XPT2046_CONTROL | XPT2046_DFR_MODE)
+#define XPT2046_Z1 (0x30 | XPT2046_CONTROL | XPT2046_DFR_MODE)
+#define XPT2046_Z2 (0x40 | XPT2046_CONTROL | XPT2046_DFR_MODE)
 
+#define XPT2046_Z1_THRESHOLD 10
 
 typedef struct
 {
@@ -54,9 +62,9 @@ typedef struct
 void 	 touch_init(void);
 void 	 Init_touch_param(tft_touch_t *param);
 	   // Get raw x,y ADC values from touch controller
-uint8_t  getTouchRaw(uint16_t *x, uint16_t *y);
-	   // Get raw z (i.e. pressure) ADC value from touch controller
-uint16_t getTouchRawZ(void);
+uint16_t  getTouchRaw(uint8_t coordinate);
+bool isTouched(void);
+bool getRawPoint(int16_t *x, int16_t *y);
 	   // Convert raw x,y values to calibrated and correctly rotated screen coordinates
 void     convertRawXY(uint16_t *x, uint16_t *y);
 	   // Get the screen touch coordinates, returns true if screen has been touched

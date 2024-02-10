@@ -33,7 +33,7 @@
 
 // If the SPI frequency is not defined, set a default
 #ifndef SPI_FREQUENCY
-  #define SPI_FREQUENCY  20000000
+  #define SPI_FREQUENCY  42000000
 #endif
 
 // If the XPT2046 SPI frequency is not defined, set a default
@@ -98,6 +98,8 @@ typedef struct lcd_driver_t_
   uint16_t _height;
 
 } lcd_driver_t;
+
+extern lcd_driver_t lcd;
 
 bool lcdInit(void);
 bool lcdIsInit(void);

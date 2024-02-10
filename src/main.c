@@ -57,6 +57,7 @@ void SystemClock_Config(void);
 void mainUi(void);
 
 uint32_t startTime = 0; // For frames-per-second estimate
+int16_t x, y;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -120,6 +121,7 @@ int main(void)
 //	  }
 //	  uartPrintf(0, "TEST_micros : %d\r\n", micros());
 //	  HAL_Delay(100);
+  	getRawPoint(&x, &y);
 	  cliMain();
 	  mainUi();
     /* USER CODE BEGIN 3 */
@@ -162,6 +164,8 @@ void mainUi(void)
 //	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
 
 	lcdPrintf(25,16*10, TFT_BLUE, "[LCD 테스트]");
+
+	lcdPrintf(25,16*13, TFT_RED, "x : %6d, y : %6d", x, y);
 
 	lcdPrintf(25,16*15, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
 	startTime = micros();

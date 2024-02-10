@@ -6,6 +6,8 @@
  */
 
 #include "touch.h"
+#include "draw_touch_calibration.h"
+#include "touch_calibration.h"
 
 tft_touch_t touch;
 
@@ -20,10 +22,9 @@ tft_touch_t touch;
 ***************************************************************************************/
 // The touch controller has a low SPI clock rate
 static inline void begin_touch_read_write(void){
-  //DMA_BUSY_CHECK;
 	TFT_CS_H; // Just in case it has been left low
+	spiSetBitWidth(_DEF_SPI1, 8);
 	SPI_Set_Speed_hz(_DEF_SPI1, SPI_TOUCH_FREQUENCY);
-    //spi.setFrequency(SPI_TOUCH_FREQUENCY);
   Toutch_CS_L;
 }
 
@@ -34,8 +35,6 @@ static inline void begin_touch_read_write(void){
 static inline void end_touch_read_write(void){
 	Toutch_CS_H;
   SPI_Set_Speed_hz(_DEF_SPI1, SPI_FREQUENCY);
-    //spi.setFrequency(SPI_FREQUENCY);
-  //SET_BUS_WRITE_MODE;
 }
 
 #ifdef _USE_HW_CLI
@@ -67,125 +66,50 @@ uint16_t delta(uint16_t a, uint16_t b) { return a > b ? a - b : b - a; }
 ** Function name:           getTouchRaw
 ** Description:             read raw touch position.  Always returns true.
 ***************************************************************************************/
-uint8_t getTouchRaw(uint16_t *x, uint16_t *y){
+uint16_t getTouchRaw(uint8_t coordinate){
   uint8_t buf[2] = {0, 0};
   uint16_t data[3] = {0, 0, 0};
   uint16_t tmp;
 
   begin_touch_read_write();
 
-  // Start YP sample request for x position, read 4 times and keep last sample
-
   for(int i = 0; i < 3; i++)
   {
-  	spiReadRegBuf(_DEF_SPI1, XPT2046_X, buf, 2);
-  	tmp = (buf[1] << 5);
-  	data[i] = (tmp | (buf[0]>>3));
+  	spiReadRegBuf(_DEF_SPI1, coordinate, buf, 2);
+  	tmp = buf[0] << 4;
+  	data[i] = (tmp | (buf[1] >> 4));
   }
+
+  end_touch_read_write();
+
 	uint16_t delta01 = delta(data[0], data[1]);
 	uint16_t delta02 = delta(data[0], data[2]);
 	uint16_t delta12 = delta(data[1], data[2]);
 
 	if (delta01 > delta02 || delta01 > delta12) {
 		if (delta02 > delta12)
+		{
 			data[0] = data[2];
+		}
 		else
+		{
 			data[1] = data[2];
+		}
 	}
-  *x = (data[0] + data[1]) >> 1;
-
-  for(int i = 0; i < 3; i++)
-  {
-  	spiReadRegBuf(_DEF_SPI1, XPT2046_Y, buf, 2);
-  	tmp = (buf[1] << 5);
-  	data[i] = (tmp | (buf[0]>>3));
-  }
-	delta01 = delta(data[0], data[1]);
-	delta02 = delta(data[0], data[2]);
-	delta12 = delta(data[1], data[2]);
-
-	if (delta01 > delta02 || delta01 > delta12) {
-		if (delta02 > delta12)
-			data[0] = data[2];
-		else
-			data[1] = data[2];
-	}
-  *y = (data[0] + data[1]) >> 1;
-
-  end_touch_read_write();
-
-  return true;
+  return (data[0] + data[1]) >> 1;
 }
 
-/***************************************************************************************
-** Function name:           getTouchRawZ
-** Description:             read raw pressure on touchpad and return Z value.
-***************************************************************************************/
-uint16_t getTouchRawZ(void){
-  uint8_t buf[2] = {0, 0};
-  int16_t tmp;
-  // Z sample request
-  int16_t tz = 0xFFF;
-  begin_touch_read_write();
-
-  spiReadRegBuf(_DEF_SPI1, XPT2046_Z1, buf, 2);
-  tmp = (buf[1] << 5);
-  tz += (int16_t)(tmp | (buf[0]>>3));
-  spiReadRegBuf(_DEF_SPI1, XPT2046_Z2, buf, 2);
-  tmp = (buf[1] << 5);
-  tz -= (int16_t)(tmp | (buf[0]>>3));
-
-  end_touch_read_write();
-
-  if (tz == 4095) tz = 0;
-
-  return (uint16_t)tz;
+bool isTouched() {
+  return getTouchRaw(XPT2046_Z1) >= XPT2046_Z1_THRESHOLD;
 }
 
-/***************************************************************************************
-** Function name:           validTouch
-** Description:             read validated position. Return false if not pressed.
-***************************************************************************************/
-#define _RAWERR 20 // Deadband error allowed in successive position samples
-uint8_t validTouch(uint16_t *x, uint16_t *y, uint16_t threshold){
-  uint16_t x_tmp, y_tmp, x_tmp2, y_tmp2;
-
-  // Wait until pressure stops increasing to debounce pressure
-  uint16_t z1 = 1;
-  uint16_t z2 = 0;
-  while (z1 > z2)
-  {
-    z2 = z1;
-    z1 = getTouchRawZ();
-    delay(1);
-  }
-
-  //  Serial.print("Z = ");Serial.println(z1);
-
-  if (z1 <= threshold) return false;
-
-  getTouchRaw(&x_tmp,&y_tmp);
-
-  //  Serial.print("Sample 1 x,y = "); Serial.print(x_tmp);Serial.print(",");Serial.print(y_tmp);
-  //  Serial.print(", Z = ");Serial.println(z1);
-
-  delay(1); // Small delay to the next sample
-  if (getTouchRawZ() <= threshold) return false;
-
-  delay(2); // Small delay to the next sample
-  getTouchRaw(&x_tmp2,&y_tmp2);
-
-  //  Serial.print("Sample 2 x,y = "); Serial.print(x_tmp2);Serial.print(",");Serial.println(y_tmp2);
-  //  Serial.print("Sample difference = ");Serial.print(abs(x_tmp - x_tmp2));Serial.print(",");Serial.println(abs(y_tmp - y_tmp2));
-
-  if (abs(x_tmp - x_tmp2) > _RAWERR) return false;
-  if (abs(y_tmp - y_tmp2) > _RAWERR) return false;
-
-  *x = x_tmp;
-  *y = y_tmp;
-
-  return true;
+bool getRawPoint(int16_t *x, int16_t *y) {
+  if (!isTouched()) return false;
+  *x = getTouchRaw(XPT2046_X);
+  *y = getTouchRaw(XPT2046_Y);
+  return isTouched();
 }
+
 
 /***************************************************************************************
 ** Function name:           getTouch
@@ -377,21 +301,29 @@ void setTouch(uint16_t *parameters){
 void cliTouch(cli_args_t *args)
 {
   bool ret = false;
-  uint16_t x, y;
 
   if (args->argc == 1 && args->isStr(0, "show") == true)
   {
     while(cliKeepLoop())
     {
-    	getTouchRaw(&x, &y);
+    	cliPrintf("x: %6d     ", getTouchRaw(XPT2046_X));
 
-    	cliPrintf("x: %d     ", x);
+    	cliPrintf("y: %6d     ", getTouchRaw(XPT2046_Y));
 
-    	cliPrintf("y: %d     ", y);
-
-    	cliPrintf("z: %d \r\n     ", getTouchRawZ());
+    	cliPrintf("z: %6d \r\n     ", getTouchRaw(XPT2046_Z1));
 
     	delay(100);
+    }
+    ret = true;
+  }
+
+  if (args->argc == 1 && args->isStr(0, "calibration") == true)
+  {
+  	lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_BLACK);
+    while(cliKeepLoop())
+    {
+    	draw_touch_calibration_screen();
+    	handleTouch(getTouchRaw(XPT2046_X), getTouchRaw(XPT2046_Y));
     }
     ret = true;
   }
@@ -399,6 +331,7 @@ void cliTouch(cli_args_t *args)
   if (ret != true)
   {
     cliPrintf("touch show\r\n");
+    cliPrintf("touch calibration\r\n");
   }
 }
 #endif

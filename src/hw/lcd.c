@@ -32,7 +32,7 @@ typedef struct
 } lcd_pixel_t;
 
 
-static lcd_driver_t lcd;
+lcd_driver_t lcd;
 
 static bool is_init = false;
 static volatile bool is_tx_done = true;
