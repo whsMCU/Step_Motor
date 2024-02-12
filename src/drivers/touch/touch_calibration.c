@@ -29,7 +29,7 @@
 
 touch_calibration_t calibration;
 static uint8_t      failed_count;
-static calibrationState calibration_state;
+static calibrationState calibration_state = CALIBRATION_NONE;
 touch_calibration_point_t calibration_points[4];
 
 static bool validate_precision(int32_t a, int32_t b) { return (a > b ? (100 * b) / a :  (100 * a) / b) > TOUCH_SCREEN_CALIBRATION_PRECISION; }
@@ -117,11 +117,11 @@ static void validate_calibration() {
   #undef CAL_PTS
 
   if (calibration_state == CALIBRATION_SUCCESS) {
-  	cliPrintf("Touch screen calibration completed");
-  	cliPrintf("TOUCH_CALIBRATION_X ", calibration.x);
-  	cliPrintf("TOUCH_CALIBRATION_Y ", calibration.y);
-  	cliPrintf("TOUCH_OFFSET_X ", calibration.offset_x);
-  	cliPrintf("TOUCH_OFFSET_Y ", calibration.offset_y);
+  	cliPrintf("Touch screen calibration completed\r\n");
+  	cliPrintf("TOUCH_CALIBRATION_X : %d\r\n", calibration.x);
+  	cliPrintf("TOUCH_CALIBRATION_Y : %d\r\n", calibration.y);
+  	cliPrintf("TOUCH_OFFSET_X : %d\r\n", calibration.offset_x);
+  	cliPrintf("TOUCH_OFFSET_Y : %d\r\n", calibration.offset_y);
     //SERIAL_ECHO_TERNARY(calibration.orientation == TOUCH_LANDSCAPE, "TOUCH_ORIENTATION ", "TOUCH_LANDSCAPE", "TOUCH_PORTRAIT", "\n");
     //TERN_(TOUCH_CALIBRATION_AUTO_SAVE, settings.save());
   }

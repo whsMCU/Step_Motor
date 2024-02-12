@@ -319,11 +319,20 @@ void cliTouch(cli_args_t *args)
 
   if (args->argc == 1 && args->isStr(0, "calibration") == true)
   {
+  	int16_t x, y;
   	lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_BLACK);
+		draw_touch_calibration_screen();
     while(cliKeepLoop())
     {
-    	draw_touch_calibration_screen();
-    	handleTouch(getTouchRaw(XPT2046_X), getTouchRaw(XPT2046_Y));
+    	if(!getRawPoint(&x, &y))
+    	{
+    		continue;
+    	}
+    	const calibrationState state = get_calibration_state();
+      if (state >= CALIBRATION_TOP_LEFT && state <= CALIBRATION_BOTTOM_RIGHT)
+      {
+				if(handleTouch(x, y))draw_touch_calibration_screen();
+      }
     }
     ret = true;
   }
