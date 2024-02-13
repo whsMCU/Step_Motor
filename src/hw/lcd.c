@@ -51,7 +51,8 @@ static volatile uint32_t draw_frame_time = 0;
 
 
 static uint16_t *p_draw_frame_buf = NULL;
-static uint16_t __attribute__((aligned(64))) frame_buffer[2][14400];
+//static uint16_t __attribute__((aligned(64))) frame_buffer[2][14400];
+static uint16_t __attribute__((aligned(64))) frame_buffer[2][10];
 
 #define LOGO_MAX_SIZE_TFT35             (300 * 1024)
 uint8_t bmp_public_buf[14 * 1024];
@@ -716,6 +717,32 @@ void drawPixel(int32_t x, int32_t y, uint32_t color)
   TFT_CS_H;
 	spiSetBitWidth(_DEF_SPI1, 8);
 
+}
+
+static void ConvHL(uint8_t *s, int32_t l)
+{
+	uint8_t v;
+	while (l > 0) {
+		v = *(s+1);
+		*(s+1) = *s;
+		*s = v;
+		s += 2;
+		l -= 2;
+	}
+}
+
+void DrawBitmap(uint16_t w, uint16_t h, uint8_t *s)
+{
+	// Enable to access GRAM
+	//LCD_WR_REG(0x2c);
+	TFT_DC_D;        // Play safe, but should already be in data mode
+	TFT_CS_L;
+	//ConvHL(s, (int32_t)w*h*2);
+  spiSetBitWidth(_DEF_SPI1, 8);
+  ConvHL(s, (int32_t)w*h*2);
+  HAL_SPI_Transmit(&hspi1, (uint8_t*)s, w * h *2, HAL_MAX_DELAY);
+  TFT_CS_H;
+	//spiSetBitWidth(_DEF_SPI1, 8);
 }
 
 void pushPixelsDMA(uint16_t* image, uint32_t len)

@@ -27,7 +27,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lvgl.h"
+#include "lv_port_disp.h"
+#include "demos/benchmark/lv_demo_benchmark.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,6 +93,22 @@ int main(void)
   /* USER CODE BEGIN SysInit */
   hwInit();
 
+  lv_init();
+
+  lv_port_disp_init();
+
+//  // Change the active screen's background color
+//  lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
+//  lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0xffffff), LV_PART_MAIN);
+//
+//  /*Create a spinner*/
+//  lv_obj_t * spinner = lv_spinner_create(lv_screen_active());
+//  lv_spinner_set_anim_params(spinner, 1000, 60);
+//  lv_obj_set_size(spinner, 64, 64);
+//  lv_obj_align(spinner, LV_ALIGN_BOTTOM_MID, 0, 0);
+
+  lv_demo_benchmark();
+
   startTime = micros();
   /* USER CODE END SysInit */
 
@@ -121,9 +139,14 @@ int main(void)
 //	  }
 //	  uartPrintf(0, "TEST_micros : %d\r\n", micros());
 //	  HAL_Delay(100);
+
+
   	getRawPoint(&x, &y);
 	  cliMain();
-	  mainUi();
+	  //mainUi();
+
+	  lv_timer_handler();
+	  HAL_Delay(5);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -144,7 +167,7 @@ void hwInit(void)
   cliInit();
   spiInit();
 
-  lcdInit();
+  //lcdInit();
 
   touch_init();
 
