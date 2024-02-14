@@ -7,7 +7,6 @@
 
 #include "spi.h"
 
-
 typedef struct
 {
   bool is_open;
@@ -383,6 +382,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	{
 		  if (hspi->Instance == spi_tbl[i].h_spi->Instance)
 		  {
+		  	lv_display_flush_ready(disp);
 			  p_spi = &spi_tbl[i];
 			  p_spi->is_tx_done = true;
 			    if (p_spi->func_tx != NULL)

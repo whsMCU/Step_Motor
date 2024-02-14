@@ -39,7 +39,7 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
-
+extern lv_display_t * disp;
 /**********************
  * GLOBAL PROTOTYPES
  **********************/

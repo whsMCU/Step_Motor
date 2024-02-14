@@ -41,6 +41,7 @@ static void disp_flush(lv_display_t * disp, const lv_area_t * area, uint8_t * px
 /**********************
  *  STATIC VARIABLES
  **********************/
+lv_display_t * disp;
 
 /**********************
  *      MACROS
@@ -60,7 +61,7 @@ void lv_port_disp_init(void)
     /*------------------------------------
      * Create a display and set a flush_cb
      * -----------------------------------*/
-    lv_display_t * disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
+    disp = lv_display_create(MY_DISP_HOR_RES, MY_DISP_VER_RES);
     lv_display_set_flush_cb(disp, disp_flush);
 
     /* Example 1
@@ -123,10 +124,10 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
 		int height = area->y2 - area->y1 + 1;
 		int width = area->x2 - area->x1 + 1;
 
-		DrawBitmap(width, height, (uint8_t *)px_map);
+		DrawBitmapDMA(width, height, (uint8_t *)px_map);
     /*IMPORTANT!!!
      *Inform the graphics library that you are ready with the flushing*/
-    lv_display_flush_ready(disp_drv);
+    //lv_display_flush_ready(disp_drv);
 }
 
 #else /*Enable this file at the top*/

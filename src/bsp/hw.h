@@ -32,6 +32,7 @@
 #include "touch.h"
 #include "image.h"
 #include "macros.h"
+#include "lv_port_disp.h"
 
 
 void hwInit(void);
