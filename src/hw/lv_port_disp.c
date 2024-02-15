@@ -118,16 +118,20 @@ void disp_disable_update(void)
  *'lv_display_flush_ready()' has to be called when it's finished.*/
 static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t * px_map)
 {
-		//Set the drawing region
-		lcd.setWindow(area->x1, area->y1, area->x2, area->y2);
+	//Set the drawing region
+	lcd.setWindow(area->x1, area->y1, area->x2, area->y2);
 
-		int height = area->y2 - area->y1 + 1;
-		int width = area->x2 - area->x1 + 1;
+	int height = area->y2 - area->y1 + 1;
+	int width = area->x2 - area->x1 + 1;
 
-		DrawBitmapDMA(width, height, (uint8_t *)px_map);
-    /*IMPORTANT!!!
-     *Inform the graphics library that you are ready with the flushing*/
-    //lv_display_flush_ready(disp_drv);
+	for (uint16_t i = 0; i < height; i++)
+	{
+		lcd.sendBuffer((px_map + width * i), width, 100);
+		//pushPixelsDMA((uint16_t*)(px_map + width * i), width);
+	}
+	/*IMPORTANT!!!
+	 *Inform the graphics library that you are ready with the flushing*/
+	lv_display_flush_ready(disp);
 }
 
 #else /*Enable this file at the top*/

@@ -26,7 +26,6 @@ spi_t spi_tbl[SPI_MAX_CH];
 
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi2;
-DMA_HandleTypeDef hdma_spi1_rx;
 DMA_HandleTypeDef hdma_spi1_tx;
 DMA_HandleTypeDef hdma_spi2_rx;
 
@@ -64,7 +63,6 @@ bool spiBegin(uint8_t ch)
     case _DEF_SPI1:
       p_spi->h_spi = &hspi1;
       p_spi->h_dma_tx = &hdma_spi1_tx;
-      p_spi->h_dma_rx = &hdma_spi1_rx;
       hspi1.Instance = SPI1;
       hspi1.Init.Mode = SPI_MODE_MASTER;
       hspi1.Init.Direction = SPI_DIRECTION_2LINES;
@@ -382,7 +380,6 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	{
 		  if (hspi->Instance == spi_tbl[i].h_spi->Instance)
 		  {
-		  	lv_display_flush_ready(disp);
 			  p_spi = &spi_tbl[i];
 			  p_spi->is_tx_done = true;
 			    if (p_spi->func_tx != NULL)
@@ -481,24 +478,6 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
 
 	__HAL_LINKDMA(spiHandle,hdmatx,hdma_spi1_tx);
 
-	/* SPI1_RX Init */
-	hdma_spi1_rx.Instance = DMA2_Stream0;
-	hdma_spi1_rx.Init.Channel = DMA_CHANNEL_3;
-	hdma_spi1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
-	hdma_spi1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
-	hdma_spi1_rx.Init.MemInc = DMA_MINC_ENABLE;
-	hdma_spi1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-	hdma_spi1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-	hdma_spi1_rx.Init.Mode = DMA_NORMAL;
-	hdma_spi1_rx.Init.Priority = DMA_PRIORITY_LOW;
-	hdma_spi1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-	if (HAL_DMA_Init(&hdma_spi1_rx) != HAL_OK)
-	{
-	  Error_Handler();
-	}
-
-	__HAL_LINKDMA(spiHandle,hdmarx,hdma_spi1_rx);
-
 	/* SPI1 interrupt Init */
 	HAL_NVIC_SetPriority(SPI1_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(SPI1_IRQn);
@@ -582,7 +561,6 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
 
     /* SPI1 DMA DeInit */
-    HAL_DMA_DeInit(spiHandle->hdmarx);
     HAL_DMA_DeInit(spiHandle->hdmatx);
 
     /* SPI1 interrupt Deinit */
