@@ -13,7 +13,6 @@
 
 #include "hangul/han.h"
 #include "lcd/lcd_fonts.h"
-#include "image/source/bootscreen_480x320x16.h"
 
 #ifdef _USE_HW_LCD
 
@@ -122,11 +121,17 @@ bool lcdInit(void)
 	return true;
 }
 
+// Robin_pro pic addr
+#define PIC_NAME_ADDR                 0x003000      // Pic information addr
+#define PIC_SIZE_ADDR                 0x007000      // Pic size information addr
+#define PIC_COUNTER_ADDR              0x008000      // Pic total number
+#define PIC_LOGO_ADDR                 0x009000      // Logo addr
+
 uint32_t logo_addroffset = 0;
 void Pic_Logo_Read(uint8_t *LogoName, uint8_t *Logo_Rbuff, uint32_t LogoReadsize) {
-  //W25QXX.init(SPI_FULL_SPEED);
-  //W25QXX.SPI_FLASH_BufferRead(Logo_Rbuff, PIC_LOGO_ADDR + logo_addroffset, LogoReadsize);
-  memcpy(Logo_Rbuff, marlin_logo_480x320x16 + logo_addroffset, LogoReadsize);
+
+  SPI_FLASH_BufferRead(Logo_Rbuff, PIC_LOGO_ADDR + logo_addroffset, LogoReadsize);
+  //memcpy(Logo_Rbuff, marlin_logo_480x320x16 + logo_addroffset, LogoReadsize);
   logo_addroffset += LogoReadsize;
   if (logo_addroffset >= LOGO_MAX_SIZE_TFT35)
     logo_addroffset = 0;
@@ -737,7 +742,7 @@ void DrawBitmap(uint16_t w, uint16_t h, uint8_t *s)
 	TFT_CS_L;
 
   spiSetBitWidth(_DEF_SPI1, 8);
-  ConvHL(s, (int32_t)w*h*2);
+  //ConvHL(s, (int32_t)w*h*2);
   HAL_SPI_Transmit(&hspi1, (uint8_t*)s, w * h *2, HAL_MAX_DELAY);
   TFT_CS_H;
 	//spiSetBitWidth(_DEF_SPI1, 8);

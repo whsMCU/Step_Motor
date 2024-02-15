@@ -27,8 +27,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "lvgl.h"
-#include "lv_port_disp.h"
 
 /* USER CODE END Includes */
 
@@ -97,16 +95,13 @@ int main(void)
 
   lv_port_disp_init();
 
-  // Change the active screen's background color
-  lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x003a57), LV_PART_MAIN);
-  lv_obj_set_style_text_color(lv_screen_active(), lv_color_hex(0xffffff), LV_PART_MAIN);
+  //LCD_Draw_Logo();
+  //HAL_Delay(2000);
 
   /*Create a spinner*/
-  lv_obj_t * spinner = lv_spinner_create(lv_screen_active());
+  lv_obj_t * spinner = lv_spinner_create(lv_scr_act(), 1000, 60);
   lv_obj_set_size(spinner, 100, 100);
   lv_obj_center(spinner);
-  lv_spinner_set_anim_params(spinner, 1000, 180);
-
 
   startTime = micros();
   /* USER CODE END SysInit */
@@ -180,7 +175,6 @@ void hwInit(void)
 
 void mainUi(void)
 {
-  LCD_Draw_Logo();
 //	lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
 
 //	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");

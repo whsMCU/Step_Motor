@@ -367,6 +367,8 @@ bool st7796SendBuffer(uint8_t *p_data, uint32_t length, uint32_t timeout_ms)
   TFT_CS_L;
 
   spiDmaTxTransfer(_DEF_SPI1, (void *)p_data, length, 0);
+  spiSetBitWidth(spi_ch, 8);
+  TFT_CS_H;
   return true;
 }
 
