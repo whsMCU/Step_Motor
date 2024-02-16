@@ -34,6 +34,7 @@
 #include "macros.h"
 #include "lvgl/lvgl.h"
 #include "lv_port_disp.h"
+#include "lv_port_indev.h"
 
 
 void hwInit(void);

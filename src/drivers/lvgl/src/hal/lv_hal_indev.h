@@ -15,7 +15,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-#include "../lv_conf_internal.h"
+#include "../lv_conf.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -91,7 +91,7 @@ typedef struct _lv_indev_drv_t {
     lv_indev_type_t type;
 
     /**< Function pointer to read input device data.*/
-    void (*read_cb)(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
+    bool (*read_cb)(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
 
     /** Called when an action happened on the input device.
      * The second parameter is the event from `lv_event_t`*/

@@ -94,6 +94,7 @@ int main(void)
   lv_init();
 
   lv_port_disp_init();
+  lv_port_indev_init();
 
   //LCD_Draw_Logo();
   //HAL_Delay(2000);
@@ -163,7 +164,7 @@ void hwInit(void)
 
   //lcdInit();
 
-  touch_init();
+  //touch_init();
 
 //  if (sdInit() == true)
 //  {
