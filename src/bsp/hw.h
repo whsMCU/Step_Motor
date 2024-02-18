@@ -35,6 +35,8 @@
 #include "lvgl/lvgl.h"
 #include "lv_port_disp.h"
 #include "lv_port_indev.h"
+#include "ui.h"
+#include "W25Qxx.h"
 
 
 void hwInit(void);

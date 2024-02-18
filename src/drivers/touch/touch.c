@@ -110,6 +110,25 @@ bool getRawPoint(int16_t *x, int16_t *y) {
   return isTouched();
 }
 
+bool get_point(int16_t *x, int16_t *y) {
+  if (!getRawPoint(x, y)) { return false; }
+
+  #if ENABLED(TOUCH_SCREEN_CALIBRATION)
+    const calibrationState state = touch_calibration.get_calibration_state();
+    if (state >= CALIBRATION_TOP_LEFT && state <= CALIBRATION_BOTTOM_RIGHT) {
+      if (touch_calibration.handleTouch(*x, *y)) lv_update_touch_calibration_screen();
+      return false;
+    }
+    *x = (int16_t)(((int32_t)(*x) * touch_calibration.calibration.x) >> 16) + touch_calibration.calibration.offset_x;
+    *y = (int16_t)(((int32_t)(*y) * touch_calibration.calibration.y) >> 16) + touch_calibration.calibration.offset_y;
+  #else
+    *x = (int16_t)(((int32_t)(*x) * TOUCH_CALIBRATION_X) >> 16) + TOUCH_OFFSET_X;
+    *y = (int16_t)(((int32_t)(*y) * TOUCH_CALIBRATION_Y) >> 16) + TOUCH_OFFSET_Y;
+  #endif
+
+  return true;
+}
+
 
 /***************************************************************************************
 ** Function name:           getTouch

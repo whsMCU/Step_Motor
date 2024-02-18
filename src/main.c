@@ -57,7 +57,10 @@ void SystemClock_Config(void);
 void mainUi(void);
 
 uint32_t startTime = 0; // For frames-per-second estimate
-int16_t x, y;
+int16_t x, y, tx, ty;
+lv_obj_t * ltr_label;
+lv_obj_t * ltr_label1;
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -99,10 +102,17 @@ int main(void)
   //LCD_Draw_Logo();
   //HAL_Delay(2000);
 
-  /*Create a spinner*/
-  lv_obj_t * spinner = lv_spinner_create(lv_scr_act(), 1000, 60);
-  lv_obj_set_size(spinner, 100, 100);
-  lv_obj_center(spinner);
+  ui_init();
+
+  ltr_label = lv_label_create(lv_scr_act());
+  lv_obj_set_style_text_font(ltr_label, &lv_font_montserrat_16, 0);
+  lv_obj_set_width(ltr_label, 310);
+  lv_obj_align(ltr_label, LV_ALIGN_TOP_LEFT, 5, 5);
+
+  ltr_label1 = lv_label_create(lv_scr_act());
+  lv_obj_set_style_text_font(ltr_label1, &lv_font_montserrat_16, 0);
+  lv_obj_set_width(ltr_label1, 310);
+  lv_obj_align(ltr_label1, LV_ALIGN_TOP_LEFT, 5, 50);
 
   startTime = micros();
   /* USER CODE END SysInit */
@@ -137,8 +147,9 @@ int main(void)
 
 
   	getRawPoint(&x, &y);
+  	get_point(&tx, &ty);
 	  cliMain();
-	  //mainUi();
+	  mainUi();
 
 	  lv_timer_handler();
 	  HAL_Delay(5);
@@ -180,9 +191,11 @@ void mainUi(void)
 
 //	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
 
-	lcdPrintf(25,16*10, TFT_BLUE, "[LCD 테스트]");
+//	lcdPrintf(25,16*10, TFT_BLUE, "[LCD 테스트]");
 
-	lcdPrintf(25,16*13, TFT_RED, "x : %6d, y : %6d", x, y);
+	lv_label_set_text_fmt(ltr_label, "tx : %6d, ty : %6d", tx, ty);
+
+	lv_label_set_text_fmt(ltr_label1, "x : %6d, y : %6d", x, y);
 
 	lcdPrintf(25,16*15, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
 	startTime = micros();

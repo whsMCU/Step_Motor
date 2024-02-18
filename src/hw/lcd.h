@@ -11,8 +11,6 @@
 #include "hw_def.h"
 #include "hw.h"
 #include "ST7796_Defines.h"
-#include "hangul/han.h"
-#include "lcd/lcd_fonts.h"
 
 #ifdef _USE_HW_LCD
 
@@ -71,15 +69,6 @@
 #define TFT_SILVER      0xC618      /* 192, 192, 192 */
 #define TFT_SKYBLUE     0x867D      /* 135, 206, 235 */
 #define TFT_VIOLET      0x915C      /* 180,  46, 226 */
-
-typedef enum
-{
-  LCD_FONT_07x10,
-  LCD_FONT_11x18,
-  LCD_FONT_16x26,
-  LCD_FONT_HAN,
-  LCD_FONT_MAX
-} LcdFont;
 
 typedef struct lcd_driver_t_ lcd_driver_t;
 
@@ -145,9 +134,7 @@ void lcdDrawFillRoundRect(int32_t x, int32_t y, int32_t w, int32_t h, int32_t r,
 void lcdDrawTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, uint32_t color);
 void lcdDrawFillTriangle(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3, int32_t y3, uint32_t color);
 void lcdDrawString(int x, int y, uint16_t color, const char *str);
-void lcdPrintf(int x, int y, uint16_t color,  const char *fmt, ...);
-void lcdSetFont(LcdFont font);
-LcdFont lcdGetFont(void);
+
 
 void LCD_Draw_Logo(void);
 

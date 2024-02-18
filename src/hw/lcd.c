@@ -11,9 +11,6 @@
 
 #include "lcd/st7796.h"
 
-#include "hangul/han.h"
-#include "lcd/lcd_fonts.h"
-
 #ifdef _USE_HW_LCD
 
 #ifndef _swap_int16_t
@@ -36,8 +33,6 @@ lcd_driver_t lcd;
 static bool is_init = false;
 static volatile bool is_tx_done = true;
 static uint8_t backlight_value = 100;
-static uint8_t frame_index = 0;
-static LcdFont lcd_font = LCD_FONT_HAN;
 
 static bool lcd_request_draw = false;
 
@@ -51,17 +46,12 @@ static volatile uint32_t draw_frame_time = 0;
 
 static uint16_t *p_draw_frame_buf = NULL;
 //static uint16_t __attribute__((aligned(64))) frame_buffer[2][14400];
-static uint16_t __attribute__((aligned(64))) frame_buffer[2][10];
 
 #define LOGO_MAX_SIZE_TFT35             (300 * 1024)
 uint8_t bmp_public_buf[14 * 1024];
 
-static lcd_font_t *font_tbl[LCD_FONT_MAX] = { &font_07x10, &font_11x18, &font_16x26, &font_hangul};
-
 //static volatile bool requested_from_thread = false;
 
-static void disHanFont(int x, int y, han_font_t *FontPtr, uint16_t textcolor);
-static void disEngFont(int x, int y, char ch, lcd_font_t *font, uint16_t textcolor);
 static void lcdDrawLineBuffer(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color, lcd_pixel_t *line);
 
 #ifdef _USE_HW_CLI
@@ -97,10 +87,6 @@ bool lcdInit(void)
 
 	lcd.setCallBack(TransferDoneISR);
 
-
-	memset(frame_buffer, 0x00, sizeof(frame_buffer));
-	p_draw_frame_buf = frame_buffer[frame_index];
-
 	lcd.fillRect(0, 0, lcd._width, lcd._height, TFT_BLACK);
 //	drawBitmap(0, 0, (const uint8_t *)background, 320, 240, TFT_RED);
 
@@ -129,7 +115,6 @@ bool lcdInit(void)
 
 uint32_t logo_addroffset = 0;
 void Pic_Logo_Read(uint8_t *LogoName, uint8_t *Logo_Rbuff, uint32_t LogoReadsize) {
-
   SPI_FLASH_BufferRead(Logo_Rbuff, PIC_LOGO_ADDR + logo_addroffset, LogoReadsize);
   //memcpy(Logo_Rbuff, marlin_logo_480x320x16 + logo_addroffset, LogoReadsize);
   logo_addroffset += LogoReadsize;
@@ -429,47 +414,6 @@ bool lcdDrawAvailable(void)
   return !lcd_request_draw;
 }
 
-bool lcdRequestDraw(void)
-{
-  if (is_init != true)
-  {
-    return false;
-  }
-  if (lcd_request_draw == true)
-  {
-    return false;
-  }
-
-  lcd.setWindow(0, 0, lcd._width-1, lcd._height-1);
-
-  lcd_request_draw = true;
-  lcd.sendBuffer((uint8_t *)frame_buffer[frame_index], lcd._width * lcd._height, 0);
-
-  return true;
-}
-
-void lcdUpdateDraw(void)
-{
-  uint32_t pre_time;
-
-  if (is_init != true)
-  {
-    return;
-  }
-
-  lcdRequestDraw();
-
-  pre_time = millis();
-  while(lcdDrawAvailable() != true)
-  {
-    delay(1);
-    if (millis()-pre_time >= 100)
-    {
-      break;
-    }
-  }
-}
-
 void lcdSetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
   if (is_init != true)
@@ -483,11 +427,6 @@ void lcdSetWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 uint16_t *lcdGetFrameBuffer(void)
 {
   return (uint16_t *)p_draw_frame_buf;
-}
-
-uint16_t *lcdGetCurrentFrameBuffer(void)
-{
-  return (uint16_t *)frame_buffer[frame_index];
 }
 
 void lcdDisplayOff(void)
@@ -779,164 +718,6 @@ void lcdDrawFillScreen(uint16_t color)
   lcdDrawFillRect(0, 0, lcd._width, lcd._height, color);
 }
 
-void lcdPrintf(int x, int y, uint16_t color,  const char *fmt, ...)
-{
-  va_list arg;
-  va_start (arg, fmt);
-  int32_t len;
-  char print_buffer[256];
-  int Size_Char;
-  int i, x_Pre = x;
-  han_font_t FontBuf;
-  uint8_t font_width;
-  uint8_t font_height;
-
-
-  len = vsnprintf(print_buffer, 255, fmt, arg);
-  va_end (arg);
-
-  if (font_tbl[lcd_font]->data != NULL)
-  {
-    for( i=0; i<len; i+=Size_Char )
-    {
-      disEngFont(x, y, print_buffer[i], font_tbl[lcd_font], color);
-
-      Size_Char = 1;
-      font_width = font_tbl[lcd_font]->width;
-      font_height = font_tbl[lcd_font]->height;
-      x += font_width;
-
-      if ((x+font_width) > lcd._width)
-      {
-        x  = x_Pre;
-        y += font_height;
-      }
-    }
-  }
-  else
-  {
-    for( i=0; i<len; i+=Size_Char )
-    {
-      hanFontLoad( &print_buffer[i], &FontBuf );
-
-      disHanFont( x, y, &FontBuf, color);
-
-      Size_Char = FontBuf.Size_Char;
-      if (Size_Char >= 2)
-      {
-        font_width = 16;
-        x += 2*8;
-      }
-      else
-      {
-        font_width = 8;
-        x += 1*8;
-      }
-
-      if ((x+font_width) > lcd._width)
-      {
-        x  = x_Pre;
-        y += 16;
-      }
-
-      if( FontBuf.Code_Type == PHAN_END_CODE ) break;
-    }
-  }
-}
-
-
-uint32_t lcdGetStrWidth(const char *fmt, ...)
-{
-  va_list arg;
-  va_start (arg, fmt);
-  int32_t len;
-  char print_buffer[256];
-  int Size_Char;
-  int i;
-  han_font_t FontBuf;
-  uint32_t str_len;
-
-
-  len = vsnprintf(print_buffer, 255, fmt, arg);
-  va_end (arg);
-
-  str_len = 0;
-
-  for( i=0; i<len; i+=Size_Char )
-  {
-    hanFontLoad( &print_buffer[i], &FontBuf );
-
-    Size_Char = FontBuf.Size_Char;
-
-    str_len += (Size_Char * 8);
-
-    if( FontBuf.Code_Type == PHAN_END_CODE ) break;
-  }
-
-  return str_len;
-}
-
-void disHanFont(int x, int y, han_font_t *FontPtr, uint16_t textcolor)
-{
-  uint16_t    i, j, Loop;
-  uint16_t  FontSize = FontPtr->Size_Char;
-  uint16_t index_x;
-
-  if (FontSize > 2)
-  {
-    FontSize = 2;
-  }
-
-  for ( i = 0 ; i < 16 ; i++ )        // 16 Lines per Font/Char
-  {
-    index_x = 0;
-    for ( j = 0 ; j < FontSize ; j++ )      // 16 x 16 (2 Bytes)
-    {
-      uint8_t font_data;
-
-      font_data = FontPtr->FontBuffer[i*FontSize +j];
-
-      for( Loop=0; Loop<8; Loop++ )
-      {
-        if( (font_data<<Loop) & (0x80))
-        {
-        	drawPixel(x + index_x, y + i, textcolor);
-        }
-        index_x++;
-      }
-    }
-  }
-}
-
-void disEngFont(int x, int y, char ch, lcd_font_t *font, uint16_t textcolor)
-{
-  uint32_t i, b, j;
-
-
-  // We gaan door het font
-  for (i = 0; i < font->height; i++)
-  {
-    b = font->data[(ch - 32) * font->height + i];
-    for (j = 0; j < font->width; j++)
-    {
-      if ((b << j) & 0x8000)
-      {
-      	drawPixel(x + j, (y + i), textcolor);
-      }
-    }
-  }
-}
-
-void lcdSetFont(LcdFont font)
-{
-  lcd_font = font;
-}
-
-LcdFont lcdGetFont(void)
-{
-  return lcd_font;
-}
-
 #ifdef _USE_HW_CLI
 void cliLcd(cli_args_t *args)
 {
@@ -945,7 +726,7 @@ void cliLcd(cli_args_t *args)
 
   if (args->argc == 1 && args->isStr(0, "test") == true)
   {
-    lcdSetFont(LCD_FONT_HAN);
+    //lcdSetFont(LCD_FONT_HAN);
 
     while(cliKeepLoop())
     {
@@ -953,17 +734,17 @@ void cliLcd(cli_args_t *args)
       {
         lcdClearBuffer(TFT_BLACK);
 
-        lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
-
-        lcdPrintf(0,16*1, TFT_WHITE, "%d fps", lcdGetFps());
-        lcdPrintf(0,16*2, TFT_WHITE, "%d ms" , lcdGetFpsTime());
-        lcdPrintf(0,16*3, TFT_WHITE, "%d ms" , millis());
+//        lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
+//
+//        lcdPrintf(0,16*1, TFT_WHITE, "%d fps", lcdGetFps());
+//        lcdPrintf(0,16*2, TFT_WHITE, "%d ms" , lcdGetFpsTime());
+//        lcdPrintf(0,16*3, TFT_WHITE, "%d ms" , millis());
 
         lcdDrawFillRect( 0, 70, 10, 10, TFT_RED);
         lcdDrawFillRect(10, 70, 10, 10, TFT_GREEN);
         lcdDrawFillRect(20, 70, 10, 10, TFT_BLUE);
 
-        lcdRequestDraw();
+//        lcdRequestDraw();
       }
     }
 

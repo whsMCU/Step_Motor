@@ -65,6 +65,7 @@ void 	 Init_touch_param(tft_touch_t *param);
 uint16_t  getTouchRaw(uint8_t coordinate);
 bool isTouched(void);
 bool getRawPoint(int16_t *x, int16_t *y);
+bool get_point(int16_t *x, int16_t *y);
 	   // Convert raw x,y values to calibrated and correctly rotated screen coordinates
 void     convertRawXY(uint16_t *x, uint16_t *y);
 	   // Get the screen touch coordinates, returns true if screen has been touched
