@@ -749,7 +749,7 @@ void cliLcd(cli_args_t *args)
     }
 
     lcdClearBuffer(TFT_BLACK);
-    lcdUpdateDraw();
+    //lcdUpdateDraw();
 
     ret = true;
   }
@@ -757,7 +757,7 @@ void cliLcd(cli_args_t *args)
   if (args->argc == 1 && args->isStr(0, "image") == true)
   {
 	  lcdClearBuffer(TFT_BLACK);
-	  lcdUpdateDraw();
+	  //lcdUpdateDraw();
 	  while(cliKeepLoop())
 	  {
 		  static bool blink = 0;
@@ -765,7 +765,7 @@ void cliLcd(cli_args_t *args)
 		  draw_fan_status(0, 0, blink);
 	  }
 	  lcdClearBuffer(TFT_BLACK);
-	  lcdUpdateDraw();
+	  //lcdUpdateDraw();
 
 	  ret = true;
   }

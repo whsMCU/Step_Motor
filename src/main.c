@@ -197,7 +197,7 @@ void mainUi(void)
 
 	lv_label_set_text_fmt(ltr_label1, "x : %6d, y : %6d", x, y);
 
-	lcdPrintf(25,16*15, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
+	//lcdPrintf(25,16*15, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
 	startTime = micros();
 }
 
