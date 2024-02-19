@@ -693,9 +693,9 @@ void DrawBitmapDMA(uint16_t w, uint16_t h, uint8_t *s)
 	TFT_CS_L;
 
   spiSetBitWidth(_DEF_SPI1, 8);
-  ConvHL(s, (int32_t)w*h*2);
+  //ConvHL(s, (int32_t)w*h*2);
   HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)s, w * h *2);
-  TFT_CS_H;
+  //TFT_CS_H;
 	//spiSetBitWidth(_DEF_SPI1, 8);
 }
 

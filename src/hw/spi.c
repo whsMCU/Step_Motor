@@ -380,6 +380,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	{
 		  if (hspi->Instance == spi_tbl[i].h_spi->Instance)
 		  {
+		  	//lv_disp_flush_ready(&disp_drv);
 			  p_spi = &spi_tbl[i];
 			  p_spi->is_tx_done = true;
 			    if (p_spi->func_tx != NULL)
