@@ -172,7 +172,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 	int width = area->x2 - area->x1 + 1;
 
 	DrawBitmap(width, height, (uint8_t *)color_p);
-	//DrawBitmapDMA(width, height, (uint8_t *)color_p);
+	DrawBitmapDMA(width, height, (uint8_t *)color_p);
 
 //	for (uint16_t i = 0; i < height; i++)
 //	{
@@ -181,7 +181,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 //	}
 	/*IMPORTANT!!!
 	 *Inform the graphics library that you are ready with the flushing*/
-	lv_disp_flush_ready(disp_drv);
+//	lv_disp_flush_ready(disp_drv);
 }
 
 /*OPTIONAL: GPU INTERFACE*/

@@ -364,7 +364,7 @@ void spiDmaTxRxStart(uint8_t ch, uint8_t *p_txbuf, uint8_t *p_rxbuf, uint16_t le
 
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 {
-	for(uint8_t i = 0; i<SPI_MAX_CH; i++)
+  for(uint8_t i = 0; i<SPI_MAX_CH; i++)
 	{
 		  if (hspi->Instance == spi_tbl[i].h_spi->Instance)
 		  {
@@ -380,7 +380,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	{
 		  if (hspi->Instance == spi_tbl[i].h_spi->Instance)
 		  {
-		  	//lv_disp_flush_ready(&disp_drv);
+		  	lv_disp_flush_ready(&disp_drv);
 			  p_spi = &spi_tbl[i];
 			  p_spi->is_tx_done = true;
 			    if (p_spi->func_tx != NULL)

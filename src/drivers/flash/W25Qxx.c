@@ -26,6 +26,12 @@
 
 #ifdef _USE_HW_FLASH
 
+static uint8_t spi_flash_Rec(void);
+static uint8_t spi_flash_read_write_byte(uint8_t data);
+static void spi_flash_Read(uint8_t *buf, uint16_t nbyte);
+static void spi_flash_Send(uint8_t b);
+static void spi_flash_SendBlock(uint8_t token, const uint8_t *buf);
+static uint16_t W25QXX_ReadID(void);
 
 bool flash_dma_mode = true;
 
@@ -40,13 +46,13 @@ void init(void) {
  *
  * @return Byte received
  */
-uint8_t spi_flash_Rec() {
+static uint8_t spi_flash_Rec() {
 
   const uint8_t returnByte = spiTransfer8(_DEF_SPI2, 0xFF);
   return returnByte;
 }
 
-uint8_t spi_flash_read_write_byte(uint8_t data) {
+static uint8_t spi_flash_read_write_byte(uint8_t data) {
   const uint8_t returnByte = spiTransfer8(_DEF_SPI2, data);
   return returnByte;
 }
@@ -60,7 +66,7 @@ uint8_t spi_flash_read_write_byte(uint8_t data) {
  *
  * @details Uses DMA
  */
-void spi_flash_Read(uint8_t *buf, uint16_t nbyte) {
+static void spi_flash_Read(uint8_t *buf, uint16_t nbyte) {
 	spiDmaTxRxStart(_DEF_SPI2, NULL, buf, nbyte);
 }
 
@@ -71,7 +77,7 @@ void spi_flash_Read(uint8_t *buf, uint16_t nbyte) {
  *
  * @details
  */
-void spi_flash_Send(uint8_t b) { spiTransfer8(_DEF_SPI2, b); }
+static void spi_flash_Send(uint8_t b) { spiTransfer8(_DEF_SPI2, b); }
 
 /**
  * @brief  Write token and then write from 512 byte buffer to SPI (for SD card)
@@ -81,12 +87,12 @@ void spi_flash_Send(uint8_t b) { spiTransfer8(_DEF_SPI2, b); }
  *
  * @details Use DMA
  */
-void spi_flash_SendBlock(uint8_t token, const uint8_t *buf) {
+static void spi_flash_SendBlock(uint8_t token, const uint8_t *buf) {
   spiTransfer8(_DEF_SPI2, token);
   spiDmaTxRxStart(_DEF_SPI2, (uint8_t*)buf, NULL, 512);
 }
 
-uint16_t W25QXX_ReadID(void) {
+static uint16_t W25QXX_ReadID(void) {
   uint16_t Temp = 0;
   FLASH_CS_L;
   spi_flash_Send(0x90);

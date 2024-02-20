@@ -56,12 +56,7 @@
 #define SPI_FLASH_PerWritePageSize   256
 
 void init(void);
-static uint8_t spi_flash_Rec(void);
-static uint8_t spi_flash_read_write_byte(uint8_t data);
-static void spi_flash_Read(uint8_t *buf, uint16_t nbyte);
-static void spi_flash_Send(uint8_t b);
-static void spi_flash_SendBlock(uint8_t token, const uint8_t *buf);
-static uint16_t W25QXX_ReadID(void);
+
 void SPI_FLASH_WriteEnable(void);
 void SPI_FLASH_WaitForWriteEnd(void);
 void SPI_FLASH_SectorErase(uint32_t SectorAddr);

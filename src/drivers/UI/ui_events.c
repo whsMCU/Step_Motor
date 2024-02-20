@@ -54,3 +54,53 @@ void Step5_DIR(lv_event_t * e)
 {
 	// Your code here
 }
+
+void Step1_X_Step(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step2_Y_Step(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step3_Z_Step(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step4_Step(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step5_Step(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step1_X_Speed(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step2_Y_Speed(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step3_Z_Speed(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step4_Speed(lv_event_t * e)
+{
+	// Your code here
+}
+
+void Step5_Speed(lv_event_t * e)
+{
+	// Your code here
+}
