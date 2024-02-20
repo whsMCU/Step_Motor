@@ -37,6 +37,7 @@
 #include "lv_port_indev.h"
 #include "ui.h"
 #include "W25Qxx.h"
+#include "stepper.h"
 
 
 void hwInit(void);

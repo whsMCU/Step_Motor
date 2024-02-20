@@ -57,9 +57,8 @@ void SystemClock_Config(void);
 void mainUi(void);
 
 uint32_t startTime = 0; // For frames-per-second estimate
-int16_t x, y, tx, ty;
-lv_obj_t * ltr_label;
-lv_obj_t * ltr_label1;
+
+AccelStepper stepper_X;
 
 /* USER CODE END PFP */
 
@@ -104,15 +103,10 @@ int main(void)
 
   ui_init();
 
-  ltr_label = lv_label_create(lv_scr_act());
-  lv_obj_set_style_text_font(ltr_label, &lv_font_montserrat_16, 0);
-  lv_obj_set_width(ltr_label, 310);
-  lv_obj_align(ltr_label, LV_ALIGN_TOP_LEFT, 5, 5);
-
-  ltr_label1 = lv_label_create(lv_scr_act());
-  lv_obj_set_style_text_font(ltr_label1, &lv_font_montserrat_16, 0);
-  lv_obj_set_width(ltr_label1, 310);
-  lv_obj_align(ltr_label1, LV_ALIGN_TOP_LEFT, 5, 50);
+  stepper_Init(&stepper_X);
+  setAcceleration(&stepper_X, 1000);
+  setMaxSpeed(&stepper_X, 1000);
+  moveTo(&stepper_X, 2000);
 
   startTime = micros();
   /* USER CODE END SysInit */
@@ -145,9 +139,15 @@ int main(void)
 //	  uartPrintf(0, "TEST_micros : %d\r\n", micros());
 //	  HAL_Delay(100);
 
+    // Change direction at the limits
+    if (distanceToGo(&stepper_X) == 0)
+      moveTo(&stepper_X, -currentPosition(&stepper_X));
+    //run(&stepper_X);
 
-  	getRawPoint(&x, &y);
-  	get_point(&tx, &ty);
+
+
+//  	getRawPoint(&x, &y);
+//  	get_point(&tx, &ty);
 	  cliMain();
 	  mainUi();
 
@@ -187,17 +187,6 @@ void hwInit(void)
 
 void mainUi(void)
 {
-//	lcdPrintf(25,16*0, TFT_GREEN, "[LCD 테스트]");
-
-//	lcdPrintf(25,16*1, TFT_RED, "[LCD 테스트]");
-
-//	lcdPrintf(25,16*10, TFT_BLUE, "[LCD 테스트]");
-
-	lv_label_set_text_fmt(ltr_label, "tx : %6d, ty : %6d", tx, ty);
-
-	lv_label_set_text_fmt(ltr_label1, "x : %6d, y : %6d", x, y);
-
-	//lcdPrintf(25,16*15, TFT_BLUE, "fps : %d ms", (micros()-startTime)/1000);
 	startTime = micros();
 }
 

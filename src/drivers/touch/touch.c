@@ -11,11 +11,6 @@
 
 tft_touch_t touch;
 
-// Define a default pressure threshold
-#ifndef Z_THRESHOLD
-  #define Z_THRESHOLD 350 // Touch pressure threshold for validating touches
-#endif
-
 /***************************************************************************************
 ** Function name:           begin_touch_read_write - was spi_begin_touch
 ** Description:             Start transaction and select touch controller
