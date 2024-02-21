@@ -106,7 +106,7 @@ int main(void)
   stepper_Init(&stepper_X);
   setAcceleration(&stepper_X, 1000);
   setMaxSpeed(&stepper_X, 1000);
-  moveTo(&stepper_X, 2000);
+  moveTo(&stepper_X, 3200);
 
   startTime = micros();
   /* USER CODE END SysInit */
@@ -141,10 +141,13 @@ int main(void)
 
     // Change direction at the limits
     if (distanceToGo(&stepper_X) == 0)
+    {
+      disableOutputs(&stepper_X);
+      HAL_Delay(2000);
+      enableOutputs(&stepper_X);
       moveTo(&stepper_X, -currentPosition(&stepper_X));
-    //run(&stepper_X);
-
-
+    }
+    run(&stepper_X);
 
 //  	getRawPoint(&x, &y);
 //  	get_point(&tx, &ty);
@@ -152,7 +155,7 @@ int main(void)
 	  mainUi();
 
 	  lv_timer_handler();
-	  HAL_Delay(5);
+	  HAL_Delay(1);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

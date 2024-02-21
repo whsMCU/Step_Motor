@@ -85,10 +85,15 @@ long targetPosition(AccelStepper *stepper);
 long currentPosition(AccelStepper *stepper);
 
 void moveTo(AccelStepper *stepper, long absolute);
+void move(AccelStepper *stepper, long relative);
+
 bool run(AccelStepper *stepper);
 
 void setMaxSpeed(AccelStepper *stepper, float speed);
 void setAcceleration(AccelStepper *stepper, float acceleration);
+void disableOutputs(AccelStepper *stepper);
+void enableOutputs(AccelStepper *stepper);
+
 unsigned long computeNewSpeed(AccelStepper *stepper);
 
 void step(AccelStepper *stepper, long step);

@@ -32,6 +32,8 @@ bool stepper_Init(AccelStepper *stepper)
   // Some reasonable default
   setAcceleration(stepper, 1);
   setMaxSpeed(stepper, 1);
+
+  return true;
 }
 
 long distanceToGo(AccelStepper *stepper)
@@ -57,6 +59,11 @@ void moveTo(AccelStepper *stepper, long absolute)
       computeNewSpeed(stepper);
       // compute new n?
     }
+}
+
+void move(AccelStepper *stepper, long relative)
+{
+    moveTo(stepper, stepper->_currentPos + relative);
 }
 
 // Run the motor to implement speed and acceleration in order to proceed to the target position
@@ -112,6 +119,17 @@ void setAcceleration(AccelStepper *stepper, float acceleration)
       stepper->_acceleration = acceleration;
       computeNewSpeed(stepper);
     }
+}
+
+// Prevents power consumption on the outputs
+void disableOutputs(AccelStepper *stepper)
+{
+  gpioPinWrite(StepX_EN,  _DEF_HIGH);
+}
+
+void enableOutputs(AccelStepper *stepper)
+{
+  gpioPinWrite(StepX_EN,  _DEF_LOW);
 }
 
 // Subclasses can override
