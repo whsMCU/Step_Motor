@@ -261,6 +261,7 @@
               },
               {
                 "nid": -1096173500,
+                "flags": 1048576,
                 "strtype": "LABEL/Label",
                 "InheritedType": 1
               },
@@ -288,9 +289,9 @@
                         "nid": -2065546356,
                         "strtype": "_style/Text_Color",
                         "intarray": [
-                          254,
-                          149,
-                          0,
+                          1,
+                          1,
+                          1,
                           255
                         ],
                         "InheritedType": 7
@@ -4946,7 +4947,7 @@
                   {
                     "disabled": false,
                     "nid": -616055995,
-                    "strtype": "TEXTAREA/EventHandler",
+                    "strtype": "_event/EventHandler",
                     "strval": "CLICKED",
                     "childs": [
                       {
@@ -4969,7 +4970,7 @@
                       },
                       {
                         "nid": 1639328119,
-                        "strtype": "_custom/action",
+                        "strtype": "_event/action",
                         "strval": "KEYBOARD SET TARGET",
                         "childs": [
                           {
@@ -5007,7 +5008,7 @@
                       },
                       {
                         "nid": 1946426994,
-                        "strtype": "_custom/action",
+                        "strtype": "_event/action",
                         "strval": "MODIFY FLAG",
                         "childs": [
                           {
@@ -5385,7 +5386,7 @@
                   {
                     "disabled": false,
                     "nid": -1067134424,
-                    "strtype": "TEXTAREA/EventHandler",
+                    "strtype": "_event/EventHandler",
                     "strval": "CLICKED",
                     "childs": [
                       {
@@ -5408,7 +5409,7 @@
                       },
                       {
                         "nid": -1867474166,
-                        "strtype": "_custom/action",
+                        "strtype": "_event/action",
                         "strval": "KEYBOARD SET TARGET",
                         "childs": [
                           {
@@ -5446,7 +5447,7 @@
                       },
                       {
                         "nid": 1911437273,
-                        "strtype": "_custom/action",
+                        "strtype": "_event/action",
                         "strval": "MODIFY FLAG",
                         "childs": [
                           {
@@ -5754,6 +5755,71 @@
                     "strtype": "BUTTON/Style_main",
                     "strval": "lv.PART.MAIN, Rectangle, Pad, Text ",
                     "InheritedType": 11
+                  },
+                  {
+                    "disabled": false,
+                    "nid": 521132111,
+                    "strtype": "_event/EventHandler",
+                    "strval": "CLICKED",
+                    "childs": [
+                      {
+                        "nid": 407046144,
+                        "strtype": "_custom/name",
+                        "strval": "Event2",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": -633850714,
+                        "strtype": "_custom/condition_C",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": -2060006829,
+                        "strtype": "_custom/condition_P",
+                        "strval": "",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": -199330045,
+                        "strtype": "_event/action",
+                        "strval": "CALL FUNCTION",
+                        "childs": [
+                          {
+                            "nid": 320301930,
+                            "strtype": "CALL FUNCTION/Name",
+                            "strval": "CALL FUNCTION",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": -585427352,
+                            "strtype": "CALL FUNCTION/Call",
+                            "strval": "<{Function_name}>( event_struct )",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 346451093,
+                            "strtype": "CALL FUNCTION/CallC",
+                            "strval": "<{Function_name}>( e );",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": -222769348,
+                            "strtype": "CALL FUNCTION/Function_name",
+                            "strval": "",
+                            "InheritedType": 10
+                          },
+                          {
+                            "nid": 603202244,
+                            "strtype": "CALL FUNCTION/Dont_export_function",
+                            "strval": "False",
+                            "InheritedType": 2
+                          }
+                        ],
+                        "InheritedType": 10
+                      }
+                    ],
+                    "InheritedType": 4
                   }
                 ],
                 "saved_objtypeKey": "BUTTON"
@@ -6567,7 +6633,6 @@
               },
               {
                 "nid": 115032726,
-                "flags": 1048576,
                 "strtype": "CHART/Chart",
                 "InheritedType": 1
               },
@@ -6580,15 +6645,15 @@
               {
                 "nid": -729655682,
                 "strtype": "CHART/Number_of_points",
-                "integer": 10,
+                "integer": 30,
                 "InheritedType": 6
               },
               {
                 "nid": -868396622,
                 "strtype": "CHART/Division_lines",
                 "intarray": [
-                  3,
-                  5
+                  10,
+                  30
                 ],
                 "InheritedType": 7
               },
@@ -6639,7 +6704,6 @@
               },
               {
                 "nid": 1721329149,
-                "flags": 1048576,
                 "strtype": "CHART/Primary_Y_Axis",
                 "InheritedType": 1
               },
@@ -6647,8 +6711,8 @@
                 "nid": 1065234350,
                 "strtype": "CHART/Primary_Y_range",
                 "intarray": [
-                  0,
-                  100
+                  -3600,
+                  3600
                 ],
                 "InheritedType": 7
               },
@@ -6666,7 +6730,7 @@
                 "strtype": "CHART/PrimaryYMinor",
                 "intarray": [
                   5,
-                  2
+                  3
                 ],
                 "InheritedType": 7
               },
@@ -6684,7 +6748,6 @@
               },
               {
                 "nid": 271380161,
-                "flags": 1048576,
                 "strtype": "CHART/Secondary_Y_Axis",
                 "InheritedType": 1
               },
@@ -6692,8 +6755,8 @@
                 "nid": 794230793,
                 "strtype": "CHART/Secondary_Y_range",
                 "intarray": [
-                  0,
-                  100
+                  -3600,
+                  3600
                 ],
                 "InheritedType": 7
               },
@@ -6711,7 +6774,7 @@
                 "strtype": "CHART/SecondaryYMinor",
                 "intarray": [
                   5,
-                  2
+                  3
                 ],
                 "InheritedType": 7
               },
@@ -6735,7 +6798,7 @@
               {
                 "nid": 2084751269,
                 "strtype": "CHART/ChartData",
-                "strval": "[{\"Axis\":0,\"Color\":[255,0,0,255],\"Series\":[0,10,20,40,80,80,40,20,10,0]}]",
+                "strval": "[]",
                 "InheritedType": 12
               },
               {
@@ -6772,7 +6835,38 @@
               },
               {
                 "part": "lv.PART.TICKS",
-                "childs": [],
+                "childs": [
+                  {
+                    "nid": -1581819951,
+                    "strtype": "_style/StyleState",
+                    "strval": "DEFAULT",
+                    "childs": [
+                      {
+                        "nid": 994095502,
+                        "strtype": "_style/Line_Color",
+                        "intarray": [
+                          0,
+                          0,
+                          0,
+                          255
+                        ],
+                        "InheritedType": 7
+                      },
+                      {
+                        "nid": 1726752394,
+                        "strtype": "_style/Text_Color",
+                        "intarray": [
+                          0,
+                          0,
+                          0,
+                          255
+                        ],
+                        "InheritedType": 7
+                      }
+                    ],
+                    "InheritedType": 1
+                  }
+                ],
                 "nid": -1087318552,
                 "strtype": "CHART/Style_ticks",
                 "strval": "lv.PART.TICKS, Line, Text",
@@ -7063,7 +7157,7 @@
               {
                 "disabled": false,
                 "nid": 1049545240,
-                "strtype": "KEYBOARD/EventHandler",
+                "strtype": "_event/EventHandler",
                 "strval": "READY",
                 "childs": [
                   {
@@ -7086,7 +7180,7 @@
                   },
                   {
                     "nid": 1990914740,
-                    "strtype": "_custom/action",
+                    "strtype": "_event/action",
                     "strval": "MODIFY FLAG",
                     "childs": [
                       {
@@ -7403,9 +7497,9 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "C:\\Users\\jjins\\Documents\\Project\\Step_Motor\\src\\drivers\\UI",
-    "projectExportFolderPath": "C:\\Users\\jjins\\Documents\\Project\\Step_Motor\\src\\drivers\\UI",
-    "backup_cnt": 59,
+    "uiExportFolderPath": "D:\\STM32CubeIDE\\Step_Motor\\src\\drivers\\UI",
+    "projectExportFolderPath": "D:\\STM32CubeIDE\\Step_Motor\\src\\drivers\\UI",
+    "backup_cnt": 75,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.6",
     "callfuncsexport": "C_FILE",

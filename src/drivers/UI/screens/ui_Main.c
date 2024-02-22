@@ -19,7 +19,7 @@ void ui_Main_screen_init(void)
     lv_obj_set_y(ui_TITLE, -145);
     lv_obj_set_align(ui_TITLE, LV_ALIGN_CENTER);
     lv_label_set_text(ui_TITLE, "STEP MOTOR Function TEST");
-    lv_obj_set_style_text_color(ui_TITLE, lv_color_hex(0xFE9500), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_TITLE, lv_color_hex(0x010101), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_TITLE, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_TITLE, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
 
@@ -200,15 +200,20 @@ void ui_Main_screen_init(void)
     lv_obj_set_y(ui_SpeedStepChart, -32);
     lv_obj_set_align(ui_SpeedStepChart, LV_ALIGN_CENTER);
     lv_chart_set_type(ui_SpeedStepChart, LV_CHART_TYPE_LINE);
+    lv_chart_set_point_count(ui_SpeedStepChart, 30);
+    lv_chart_set_range(ui_SpeedStepChart, LV_CHART_AXIS_PRIMARY_Y, -3600, 3600);
+    lv_chart_set_range(ui_SpeedStepChart, LV_CHART_AXIS_SECONDARY_Y, -3600, 3600);
+    lv_chart_set_div_line_count(ui_SpeedStepChart, 10, 30);
     lv_chart_set_axis_tick(ui_SpeedStepChart, LV_CHART_AXIS_PRIMARY_X, 10, 5, 5, 2, true, 50);
-    lv_chart_set_axis_tick(ui_SpeedStepChart, LV_CHART_AXIS_PRIMARY_Y, 10, 5, 5, 2, true, 50);
-    lv_chart_set_axis_tick(ui_SpeedStepChart, LV_CHART_AXIS_SECONDARY_Y, 10, 5, 5, 2, true, 25);
-    lv_chart_series_t * ui_SpeedStepChart_series_1 = lv_chart_add_series(ui_SpeedStepChart, lv_color_hex(0xFF0000),
-                                                                         LV_CHART_AXIS_PRIMARY_Y);
-    static lv_coord_t ui_SpeedStepChart_series_1_array[] = { 0, 10, 20, 40, 80, 80, 40, 20, 10, 0 };
-    lv_chart_set_ext_y_array(ui_SpeedStepChart, ui_SpeedStepChart_series_1, ui_SpeedStepChart_series_1_array);
+    lv_chart_set_axis_tick(ui_SpeedStepChart, LV_CHART_AXIS_PRIMARY_Y, 10, 5, 5, 3, true, 50);
+    lv_chart_set_axis_tick(ui_SpeedStepChart, LV_CHART_AXIS_SECONDARY_Y, 10, 5, 5, 3, true, 25);
 
 
+
+    lv_obj_set_style_line_color(ui_SpeedStepChart, lv_color_hex(0x000000), LV_PART_TICKS | LV_STATE_DEFAULT);
+    lv_obj_set_style_line_opa(ui_SpeedStepChart, 255, LV_PART_TICKS | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_SpeedStepChart, lv_color_hex(0x000000), LV_PART_TICKS | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_SpeedStepChart, 255, LV_PART_TICKS | LV_STATE_DEFAULT);
 
     ui_Keyboard1 = lv_keyboard_create(ui_Main);
     lv_keyboard_set_mode(ui_Keyboard1, LV_KEYBOARD_MODE_NUMBER);
@@ -223,6 +228,7 @@ void ui_Main_screen_init(void)
     lv_obj_add_event_cb(ui_Step1DIR, ui_event_Step1DIR, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_Step1Speed, ui_event_Step1Speed, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_Step1Step, ui_event_Step1Step, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_Step1CMD, ui_event_Step1CMD, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_Keyboard1, ui_event_Keyboard1, LV_EVENT_ALL, NULL);
 
 }

@@ -48,17 +48,27 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+AccelStepper stepper_X;
 
+void lv_draw_chart(lv_chart_series_t * ser1, lv_chart_series_t * ser2)
+{
+  static uint32_t last_tick = 0;
+  uint32_t curr_tick = millis();
+
+  if((curr_tick - last_tick) >= (500)) {
+      last_tick = curr_tick;
+
+      lv_chart_set_next_value(ui_SpeedStepChart, ser1, stepper_X._targetPos);
+      lv_chart_set_next_value(ui_SpeedStepChart, ser2, stepper_X._currentPos);
+
+      lv_chart_refresh(ui_SpeedStepChart); /*Required after direct set*/
+  }
+}
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void mainUi(void);
-
-uint32_t startTime = 0; // For frames-per-second estimate
-
-AccelStepper stepper_X;
 
 /* USER CODE END PFP */
 
@@ -103,12 +113,16 @@ int main(void)
 
   ui_init();
 
+  lv_chart_series_t * ui_SpeedStepChart_series_Target = lv_chart_add_series(ui_SpeedStepChart, lv_color_hex(0xFF0000),
+                                                                           LV_CHART_AXIS_PRIMARY_Y);
+  lv_chart_series_t * ui_SpeedStepChart_series_Step = lv_chart_add_series(ui_SpeedStepChart, lv_color_hex(0x0005FF),
+                                                                           LV_CHART_AXIS_SECONDARY_Y);
+
   stepper_Init(&stepper_X, StepX_EN, StepX_DIR, StepX_STEP);
   setAcceleration(&stepper_X, 1000);
   setMaxSpeed(&stepper_X, 1000);
   moveTo(&stepper_X, 3200);
 
-  startTime = micros();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -138,10 +152,8 @@ int main(void)
     }
     run(&stepper_X);
 
-//  	getRawPoint(&x, &y);
-//  	get_point(&tx, &ty);
 	  cliMain();
-	  mainUi();
+	  lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
 
 	  lv_timer_handler_run_in_period(5);
     /* USER CODE BEGIN 3 */
@@ -174,11 +186,6 @@ void hwInit(void)
 //  }
 
   cliOpen(_DEF_USB, 57600);
-}
-
-void mainUi(void)
-{
-	startTime = micros();
 }
 
 /**

@@ -5,102 +5,18 @@
 
 #include "ui.h"
 
+
 void Step1_X_EN(lv_event_t * e)
 {
-	// Your code here
-}
-
-void Step2_Y_EN(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step3_Z_EN(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step4_EN(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step5_EN(lv_event_t * e)
-{
-	// Your code here
+  //gpioPinWrite(stepper->_enablePin,  _DEF_HIGH);
 }
 
 void Step1_X_DIR(lv_event_t * e)
 {
-	// Your code here
+  //gpioPinWrite(stepper->_dirPin,  _DEF_HIGH);
 }
 
-void Step2_Y_DIR(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step3_Z_DIR(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step4_DIR(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step5_DIR(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step1_X_Step(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step2_Y_Step(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step3_Z_Step(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step4_Step(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step5_Step(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step1_X_Speed(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step2_Y_Speed(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step3_Z_Speed(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step4_Speed(lv_event_t * e)
-{
-	// Your code here
-}
-
-void Step5_Speed(lv_event_t * e)
+void Step1_X_CMD(lv_event_t * e)
 {
 	// Your code here
 }

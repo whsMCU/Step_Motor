@@ -40,6 +40,7 @@ void ui_event_Step1Speed(lv_event_t * e);
 extern lv_obj_t * ui_Step1Speed;
 void ui_event_Step1Step(lv_event_t * e);
 extern lv_obj_t * ui_Step1Step;
+void ui_event_Step1CMD(lv_event_t * e);
 extern lv_obj_t * ui_Step1CMD;
 extern lv_obj_t * ui_Step1Label;
 extern lv_obj_t * ui_SpeedStepChart;

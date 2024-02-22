@@ -35,6 +35,7 @@ void ui_event_Step1Speed(lv_event_t * e);
 lv_obj_t * ui_Step1Speed;
 void ui_event_Step1Step(lv_event_t * e);
 lv_obj_t * ui_Step1Step;
+void ui_event_Step1CMD(lv_event_t * e);
 lv_obj_t * ui_Step1CMD;
 lv_obj_t * ui_Step1Label;
 lv_obj_t * ui_SpeedStepChart;
@@ -85,6 +86,14 @@ void ui_event_Step1Step(lv_event_t * e)
     if(event_code == LV_EVENT_CLICKED) {
         _ui_keyboard_set_target(ui_Keyboard1,  ui_Step1Step);
         _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_TOGGLE);
+    }
+}
+void ui_event_Step1CMD(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_CLICKED) {
+        (e);
     }
 }
 void ui_event_Keyboard1(lv_event_t * e)

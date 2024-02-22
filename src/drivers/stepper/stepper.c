@@ -123,6 +123,31 @@ void setAcceleration(AccelStepper *stepper, float acceleration)
     }
 }
 
+float acceleration(AccelStepper *stepper)
+{
+    return stepper->_acceleration;
+}
+
+void setSpeed(AccelStepper *stepper, float speed)
+{
+    if (speed == stepper->_speed)
+        return;
+    speed = constrain(speed, -stepper->_maxSpeed, stepper->_maxSpeed);
+    if (speed == 0.0)
+      stepper->_stepInterval = 0;
+    else
+    {
+      stepper->_stepInterval = fabs(1000000.0 / speed);
+      stepper->_direction = (speed > 0.0) ? DIRECTION_CW : DIRECTION_CCW;
+    }
+    stepper->_speed = speed;
+}
+
+float speed(AccelStepper *stepper)
+{
+    return stepper->_speed;
+}
+
 // Prevents power consumption on the outputs
 void disableOutputs(AccelStepper *stepper)
 {

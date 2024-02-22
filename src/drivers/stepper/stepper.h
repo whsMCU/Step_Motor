@@ -93,6 +93,10 @@ bool run(AccelStepper *stepper);
 
 void setMaxSpeed(AccelStepper *stepper, float speed);
 void setAcceleration(AccelStepper *stepper, float acceleration);
+float acceleration(AccelStepper *stepper);
+void setSpeed(AccelStepper *stepper, float speed);
+float speed(AccelStepper *stepper);
+
 void disableOutputs(AccelStepper *stepper);
 void enableOutputs(AccelStepper *stepper);
 
