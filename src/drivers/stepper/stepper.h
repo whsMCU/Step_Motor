@@ -57,6 +57,8 @@ typedef struct
 
   /// Enable pin for stepper driver, or 0xFF if unused.
   uint8_t        _enablePin;
+  uint8_t        _dirPin;
+  uint8_t        _stepPin;
 
   /// The pointer to a forward-step procedure
   void (*_forward)();
@@ -78,7 +80,7 @@ typedef struct
 
 }AccelStepper;
 
-bool stepper_Init(AccelStepper *stepper);
+bool stepper_Init(AccelStepper *stepper, uint8_t enablePin, uint8_t dirPin, uint8_t stepPin);
 
 long distanceToGo(AccelStepper *stepper);
 long targetPosition(AccelStepper *stepper);

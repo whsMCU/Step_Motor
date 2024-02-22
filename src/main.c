@@ -103,7 +103,7 @@ int main(void)
 
   ui_init();
 
-  stepper_Init(&stepper_X);
+  stepper_Init(&stepper_X, StepX_EN, StepX_DIR, StepX_STEP);
   setAcceleration(&stepper_X, 1000);
   setMaxSpeed(&stepper_X, 1000);
   moveTo(&stepper_X, 3200);
@@ -127,17 +127,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-//	  gpioPinWrite(StepX_EN, _DEF_LOW);
-//	  gpioPinWrite(StepX_DIR, _DEF_HIGH);
-//	  for(int i = 0 ; i <2000 ; i++)
-//	  {
-//		  gpioPinWrite(StepX_STEP, _DEF_HIGH);
-//		  delayMicroseconds(500);
-//		  gpioPinWrite(StepX_STEP, _DEF_LOW);
-//	  	delayMicroseconds(500);
-//	  }
-//	  uartPrintf(0, "TEST_micros : %d\r\n", micros());
-//	  HAL_Delay(100);
 
     // Change direction at the limits
     if (distanceToGo(&stepper_X) == 0)
@@ -154,8 +143,7 @@ int main(void)
 	  cliMain();
 	  mainUi();
 
-	  lv_timer_handler();
-	  HAL_Delay(1);
+	  lv_timer_handler_run_in_period(5);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

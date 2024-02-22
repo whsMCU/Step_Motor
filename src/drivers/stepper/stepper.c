@@ -8,7 +8,7 @@
 
 #include <stepper/stepper.h>
 
-bool stepper_Init(AccelStepper *stepper)
+bool stepper_Init(AccelStepper *stepper, uint8_t enablePin, uint8_t dirPin, uint8_t stepPin)
 {
   stepper->_currentPos = 0;
   stepper->_targetPos = 0;
@@ -18,7 +18,9 @@ bool stepper_Init(AccelStepper *stepper)
   stepper->_sqrt_twoa = 1.0;
   stepper->_stepInterval = 0;
   stepper->_minPulseWidth = 1;
-  stepper->_enablePin = 0xff;
+  stepper->_enablePin = enablePin;
+  stepper->_dirPin = dirPin;
+  stepper->_stepPin = stepPin;
   stepper->_lastStepTime = 0;
 
   // NEW
@@ -28,7 +30,7 @@ bool stepper_Init(AccelStepper *stepper)
   stepper->_cmin = 1.0;
   stepper->_direction = DIRECTION_CCW;
 
-  gpioPinWrite(StepX_EN,  _DEF_LOW);
+  gpioPinWrite(stepper->_enablePin,  _DEF_LOW);
   // Some reasonable default
   setAcceleration(stepper, 1);
   setMaxSpeed(stepper, 1);
@@ -124,12 +126,12 @@ void setAcceleration(AccelStepper *stepper, float acceleration)
 // Prevents power consumption on the outputs
 void disableOutputs(AccelStepper *stepper)
 {
-  gpioPinWrite(StepX_EN,  _DEF_HIGH);
+  gpioPinWrite(stepper->_enablePin,  _DEF_HIGH);
 }
 
 void enableOutputs(AccelStepper *stepper)
 {
-  gpioPinWrite(StepX_EN,  _DEF_LOW);
+  gpioPinWrite(stepper->_enablePin,  _DEF_LOW);
 }
 
 // Subclasses can override
@@ -225,18 +227,18 @@ void step(AccelStepper *stepper, long step)
 
     if(stepper->_direction == 1)
     {
-      gpioPinWrite(StepX_DIR,  _DEF_HIGH);
-      gpioPinWrite(StepX_STEP,  _DEF_HIGH);
+      gpioPinWrite(stepper->_dirPin,  _DEF_HIGH);
+      gpioPinWrite(stepper->_stepPin,  _DEF_HIGH);
     }
     else
     {
-      gpioPinWrite(StepX_DIR,  _DEF_LOW);
-      gpioPinWrite(StepX_STEP,  _DEF_HIGH);
+      gpioPinWrite(stepper->_dirPin,  _DEF_LOW);
+      gpioPinWrite(stepper->_stepPin,  _DEF_HIGH);
     }
     // Caution 200ns setup time
     // Delay the minimum allowed pulse width
     delayMicroseconds(stepper->_minPulseWidth);
-    gpioPinWrite(StepX_STEP,  _DEF_LOW);
+    gpioPinWrite(stepper->_stepPin,  _DEF_LOW);
 }
 
 // Implements steps according to the current step interval

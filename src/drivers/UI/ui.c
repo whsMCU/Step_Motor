@@ -12,6 +12,7 @@
 // SCREEN: ui_Main
 void ui_Main_screen_init(void);
 lv_obj_t * ui_Main;
+lv_obj_t * ui_TITLE;
 lv_obj_t * ui_Menu1;
 lv_obj_t * ui_Step1;
 lv_obj_t * ui_Step2;
@@ -24,52 +25,21 @@ lv_obj_t * ui_EN;
 lv_obj_t * ui_DIR;
 lv_obj_t * ui_SPEED;
 lv_obj_t * ui_STEP;
-void ui_event_Switch1(lv_event_t * e);
-lv_obj_t * ui_Switch1;
-void ui_event_Switch2(lv_event_t * e);
-lv_obj_t * ui_Switch2;
-void ui_event_Switch3(lv_event_t * e);
-lv_obj_t * ui_Switch3;
-void ui_event_Switch4(lv_event_t * e);
-lv_obj_t * ui_Switch4;
-void ui_event_Switch5(lv_event_t * e);
-lv_obj_t * ui_Switch5;
-void ui_event_Switch6(lv_event_t * e);
-lv_obj_t * ui_Switch6;
-void ui_event_Switch7(lv_event_t * e);
-lv_obj_t * ui_Switch7;
-void ui_event_Switch8(lv_event_t * e);
-lv_obj_t * ui_Switch8;
-void ui_event_Switch9(lv_event_t * e);
-lv_obj_t * ui_Switch9;
-void ui_event_Switch10(lv_event_t * e);
-lv_obj_t * ui_Switch10;
-lv_obj_t * ui_Label11;
-void ui_event_Button1(lv_event_t * e);
-lv_obj_t * ui_Button1;
-void ui_event_Button2(lv_event_t * e);
-lv_obj_t * ui_Button2;
-void ui_event_Button3(lv_event_t * e);
-lv_obj_t * ui_Button3;
-void ui_event_Button4(lv_event_t * e);
-lv_obj_t * ui_Button4;
-void ui_event_Button5(lv_event_t * e);
-lv_obj_t * ui_Button5;
-void ui_event_Dropdown1(lv_event_t * e);
-lv_obj_t * ui_Dropdown1;
-void ui_event_Dropdown2(lv_event_t * e);
-lv_obj_t * ui_Dropdown2;
-void ui_event_Dropdown3(lv_event_t * e);
-lv_obj_t * ui_Dropdown3;
-void ui_event_Dropdown4(lv_event_t * e);
-lv_obj_t * ui_Dropdown4;
-void ui_event_Dropdown5(lv_event_t * e);
-lv_obj_t * ui_Dropdown5;
-lv_obj_t * ui_Label12;
-lv_obj_t * ui_Label13;
-lv_obj_t * ui_Label14;
-lv_obj_t * ui_Label15;
-lv_obj_t * ui_Label16;
+lv_obj_t * ui_CMD;
+lv_obj_t * ui_Control;
+void ui_event_Step1EN(lv_event_t * e);
+lv_obj_t * ui_Step1EN;
+void ui_event_Step1DIR(lv_event_t * e);
+lv_obj_t * ui_Step1DIR;
+void ui_event_Step1Speed(lv_event_t * e);
+lv_obj_t * ui_Step1Speed;
+void ui_event_Step1Step(lv_event_t * e);
+lv_obj_t * ui_Step1Step;
+lv_obj_t * ui_Step1CMD;
+lv_obj_t * ui_Step1Label;
+lv_obj_t * ui_SpeedStepChart;
+void ui_event_Keyboard1(lv_event_t * e);
+lv_obj_t * ui_Keyboard1;
 lv_obj_t * ui____initial_actions0;
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
@@ -83,7 +53,7 @@ lv_obj_t * ui____initial_actions0;
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
-void ui_event_Switch1(lv_event_t * e)
+void ui_event_Step1EN(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
@@ -91,39 +61,7 @@ void ui_event_Switch1(lv_event_t * e)
         Step1_X_EN(e);
     }
 }
-void ui_event_Switch2(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step2_Y_EN(e);
-    }
-}
-void ui_event_Switch3(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step3_Z_EN(e);
-    }
-}
-void ui_event_Switch4(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step4_EN(e);
-    }
-}
-void ui_event_Switch5(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step5_EN(e);
-    }
-}
-void ui_event_Switch6(lv_event_t * e)
+void ui_event_Step1DIR(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
@@ -131,116 +69,30 @@ void ui_event_Switch6(lv_event_t * e)
         Step1_X_DIR(e);
     }
 }
-void ui_event_Switch7(lv_event_t * e)
+void ui_event_Step1Speed(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
-        Step2_Y_DIR(e);
+        _ui_keyboard_set_target(ui_Keyboard1,  ui_Step1Speed);
+        _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_TOGGLE);
     }
 }
-void ui_event_Switch8(lv_event_t * e)
+void ui_event_Step1Step(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
-        Step3_Z_DIR(e);
+        _ui_keyboard_set_target(ui_Keyboard1,  ui_Step1Step);
+        _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_TOGGLE);
     }
 }
-void ui_event_Switch9(lv_event_t * e)
+void ui_event_Keyboard1(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step4_DIR(e);
-    }
-}
-void ui_event_Switch10(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step5_DIR(e);
-    }
-}
-void ui_event_Button1(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step1_X_Step(e);
-    }
-}
-void ui_event_Button2(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step2_Y_Step(e);
-    }
-}
-void ui_event_Button3(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step3_Z_Step(e);
-    }
-}
-void ui_event_Button4(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step4_Step(e);
-    }
-}
-void ui_event_Button5(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_CLICKED) {
-        Step5_Step(e);
-    }
-}
-void ui_event_Dropdown1(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_VALUE_CHANGED) {
-        Step1_X_Speed(e);
-    }
-}
-void ui_event_Dropdown2(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_VALUE_CHANGED) {
-        Step2_Y_Speed(e);
-    }
-}
-void ui_event_Dropdown3(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_VALUE_CHANGED) {
-        Step3_Z_Speed(e);
-    }
-}
-void ui_event_Dropdown4(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_VALUE_CHANGED) {
-        Step4_Speed(e);
-    }
-}
-void ui_event_Dropdown5(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-    lv_obj_t * target = lv_event_get_target(e);
-    if(event_code == LV_EVENT_VALUE_CHANGED) {
-        Step5_Speed(e);
+    if(event_code == LV_EVENT_READY) {
+        _ui_flag_modify(ui_Keyboard1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     }
 }
 
