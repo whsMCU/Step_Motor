@@ -12,6 +12,7 @@ extern "C" {
 
 void Step1_X_EN(lv_event_t * e);
 void Step1_X_DIR(lv_event_t * e);
+void Step1_X_CMD(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

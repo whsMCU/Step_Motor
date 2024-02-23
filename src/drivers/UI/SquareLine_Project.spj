@@ -5806,7 +5806,7 @@
                           {
                             "nid": -222769348,
                             "strtype": "CALL FUNCTION/Function_name",
-                            "strval": "",
+                            "strval": "Step1_X_CMD",
                             "InheritedType": 10
                           },
                           {
@@ -7497,9 +7497,9 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "D:\\STM32CubeIDE\\Step_Motor\\src\\drivers\\UI",
-    "projectExportFolderPath": "D:\\STM32CubeIDE\\Step_Motor\\src\\drivers\\UI",
-    "backup_cnt": 75,
+    "uiExportFolderPath": "C:\\Users\\jjins\\Documents\\Project\\Step_Motor\\src\\drivers\\UI",
+    "projectExportFolderPath": "C:\\Users\\jjins\\Documents\\Project\\Step_Motor\\src\\drivers\\UI",
+    "backup_cnt": 76,
     "autosave_cnt": 0,
     "lvgl_version": "8.3.6",
     "callfuncsexport": "C_FILE",

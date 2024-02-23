@@ -16,10 +16,6 @@
 //#define USE_SDCARD
 //#define USE_SDCARD_SPI
 
-//SPI-------
-#define tb_TFT 	  0
-#define tb_Toutch  1
-
 //----------
 
 #define _USE_HW_CDC

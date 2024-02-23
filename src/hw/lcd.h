@@ -31,7 +31,7 @@
 
 // If the SPI frequency is not defined, set a default
 #ifndef SPI_FREQUENCY
-  #define SPI_FREQUENCY  42000000
+  #define SPI_FREQUENCY  40000000
 #endif
 
 // If the XPT2046 SPI frequency is not defined, set a default
