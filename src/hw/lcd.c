@@ -681,7 +681,7 @@ void DrawBitmap(uint16_t w, uint16_t h, uint8_t *s)
 	TFT_CS_L;
 
   spiSetBitWidth(_DEF_SPI1, 8);
-  //ConvHL(s, (int32_t)w*h*2);
+  ConvHL(s, (int32_t)w*h*2);
   HAL_SPI_Transmit(&hspi1, (uint8_t*)s, w * h *2, HAL_MAX_DELAY);
   TFT_CS_H;
 	//spiSetBitWidth(_DEF_SPI1, 8);
@@ -692,9 +692,9 @@ void DrawBitmapDMA(uint16_t w, uint16_t h, uint8_t *s)
 	TFT_DC_D;        // Play safe, but should already be in data mode
 	TFT_CS_L;
 
-  spiSetBitWidth(_DEF_SPI1, 8);
+  spiSetBitWidth(_DEF_SPI1, 16);
   //ConvHL(s, (int32_t)w*h*2);
-  spiDmaTxStart(_DEF_SPI1, (uint8_t*)s, w * h *2);
+  spiDmaTxStart(_DEF_SPI1, s, w * h);
   //HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)s, w * h *2);
   //TFT_CS_H;
 	//spiSetBitWidth(_DEF_SPI1, 8);

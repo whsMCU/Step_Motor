@@ -142,7 +142,6 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    // Change direction at the limits
     if (distanceToGo(&stepper_X) == 0)
     {
       disableOutputs(&stepper_X);
