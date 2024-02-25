@@ -2,7 +2,7 @@
  * st7796.h
  *
  *  Created on: Jan 29, 2024
- *      Author: 차용선
+ *      Author: 왕학승
  */
 
 #ifndef SRC_DRIVERS_LCD_ST7796_H_

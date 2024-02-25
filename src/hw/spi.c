@@ -287,7 +287,6 @@ void spiDmaTxStart(uint8_t ch, uint8_t *p_buf, uint32_t length)
 	spi_t *p_spi = &spi_tbl[ch];
 
   if (p_spi->is_open == false) return;
-
   p_spi->is_tx_done = false;
   HAL_SPI_Transmit_DMA(p_spi->h_spi, p_buf, length);
 }
@@ -378,7 +377,10 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 	{
 		  if (hspi->Instance == spi_tbl[i].h_spi->Instance)
 		  {
-		  	lv_disp_flush_ready(&disp_drv);
+		    if(i == _DEF_SPI1)
+		    {
+		      lv_disp_flush_ready(&disp_drv);
+		    }
 			  p_spi = &spi_tbl[i];
 			  p_spi->is_tx_done = true;
 			    if (p_spi->func_tx != NULL)

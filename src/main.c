@@ -61,7 +61,7 @@ void lv_draw_chart(lv_chart_series_t * ser1, lv_chart_series_t * ser2)
       lv_chart_set_next_value(ui_SpeedStepChart, ser1, stepper_X._targetPos);
       lv_chart_set_next_value(ui_SpeedStepChart, ser2, stepper_X._currentPos);
 
-      lv_chart_refresh(ui_SpeedStepChart); /*Required after direct set*/
+      //lv_chart_refresh(ui_SpeedStepChart); /*Required after direct set*/
   }
 }
 /* USER CODE END PV */
@@ -119,8 +119,8 @@ int main(void)
                                                                            LV_CHART_AXIS_SECONDARY_Y);
 
   stepper_Init(&stepper_X, StepX_EN, StepX_DIR, StepX_STEP);
-  setAcceleration(&stepper_X, 1000);
-  setMaxSpeed(&stepper_X, 1000);
+  setAcceleration(&stepper_X, 4000);
+  setMaxSpeed(&stepper_X, 4000);
   moveTo(&stepper_X, 3200);
 
   /* USER CODE END SysInit */
@@ -152,9 +152,11 @@ int main(void)
     run(&stepper_X);
 
 	  cliMain();
-	  lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
+	  //lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
 
-	  lv_timer_handler_run_in_period(5);
+	  //lv_timer_handler_run_in_period(5);
+	  lv_timer_handler();
+	  HAL_Delay(5);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

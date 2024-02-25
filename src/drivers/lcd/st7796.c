@@ -2,7 +2,7 @@
  * st7796.c
  *
  *  Created on: Jan 29, 2024
- *      Author: 차용선
+ *      Author: 왕학승
  */
 
 
@@ -25,8 +25,8 @@ static bool st7796Reset(void);
 
 static void TransferDoneISR(void)
 {
-  if (is_write_frame == true)
-  {
+//  if (is_write_frame == true)
+//  {
     is_write_frame = false;
     TFT_CS_H;
 
@@ -34,7 +34,7 @@ static void TransferDoneISR(void)
     {
       frameCallBack();
     }
-  }
+//  }
 }
 
 
