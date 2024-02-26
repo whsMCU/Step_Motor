@@ -90,7 +90,6 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-
 	HAL_Init();
 
   /* USER CODE BEGIN Init */
@@ -142,17 +141,17 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    if (distanceToGo(&stepper_X) == 0)
-    {
-      disableOutputs(&stepper_X);
-      HAL_Delay(2000);
-      enableOutputs(&stepper_X);
-      moveTo(&stepper_X, -currentPosition(&stepper_X));
-    }
-    run(&stepper_X);
+//    if (distanceToGo(&stepper_X) == 0)
+//    {
+//      disableOutputs(&stepper_X);
+//      HAL_Delay(2000);
+//      enableOutputs(&stepper_X);
+//      moveTo(&stepper_X, -currentPosition(&stepper_X));
+//    }
+//    run(&stepper_X);
 
 	  cliMain();
-	  //lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
+	  lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
 
 	  //lv_timer_handler_run_in_period(5);
 	  lv_timer_handler();
@@ -168,6 +167,7 @@ void hwInit(void)
     rtcInit();
   #endif
   MX_TIM5_Init();
+  MX_TIM6_Init();
   gpioInit();
   buttonInit();
   flashInit();
