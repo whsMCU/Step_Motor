@@ -8,6 +8,15 @@
 
 #include <stepper/stepper.h>
 
+static void TimerCallbackISR(void)
+{
+  static uint32_t last_tick = 0;
+  static uint32_t time_test = 0;
+  uint32_t curr_tick = micros();
+  time_test = curr_tick - last_tick;
+  last_tick = curr_tick;
+}
+
 bool stepper_Init(AccelStepper *stepper, uint8_t enablePin, uint8_t dirPin, uint8_t stepPin)
 {
   stepper->_currentPos = 0;
@@ -29,6 +38,8 @@ bool stepper_Init(AccelStepper *stepper, uint8_t enablePin, uint8_t dirPin, uint
   stepper->_cn = 0.0;
   stepper->_cmin = 1.0;
   stepper->_direction = DIRECTION_CCW;
+
+  timAttachInterrupt(_DEF_TIM2, TimerCallbackISR);
 
   gpioPinWrite(stepper->_enablePin,  _DEF_LOW);
   // Some reasonable default

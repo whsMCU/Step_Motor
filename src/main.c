@@ -166,8 +166,9 @@ void hwInit(void)
   #ifdef _USE_HW_RTC
     rtcInit();
   #endif
-  MX_TIM5_Init();
-  MX_TIM6_Init();
+  tim_Init();
+  timBegin(_DEF_TIM1);
+  timBegin(_DEF_TIM2);
   gpioInit();
   buttonInit();
   flashInit();
@@ -176,10 +177,6 @@ void hwInit(void)
   uartInit();
   cliInit();
   spiInit();
-
-  //lcdInit();
-
-  //touch_init();
 
 //  if (sdInit() == true)
 //  {

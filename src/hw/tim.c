@@ -21,8 +21,18 @@
 #include "tim.h"
 #include "cli.h"
 /* USER CODE BEGIN 0 */
+typedef struct
+{
+  bool is_start;
 
+  void (*func_cb)(void);
+
+  TIM_HandleTypeDef *h_tim;
+
+} tim_t;
 /* USER CODE END 0 */
+
+tim_t tim_tbl[HW_TIM_MAX_CH];
 
 TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim6;
@@ -31,97 +41,115 @@ TIM_HandleTypeDef htim6;
 static void cliTimer(cli_args_t *args);
 #endif
 
-/* TIM5 init function */
-void MX_TIM5_Init(void)
+
+void tim_Init(void)
 {
 
-  /* USER CODE BEGIN TIM5_Init 0 */
+  for (int i=0; i<HW_TIM_MAX_CH; i++)
+  {
+    tim_tbl[i].is_start = false;
+    tim_tbl[i].func_cb  = NULL;
+  }
+}
 
-  /* USER CODE END TIM5_Init 0 */
+bool timBegin(uint8_t ch)
+{
+  bool ret = false;
+  tim_t *p_tim = &tim_tbl[ch];
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
-  /* USER CODE BEGIN TIM5_Init 1 */
-
-  /* USER CODE END TIM5_Init 1 */
-  htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 83;
-  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 4294967295;
-  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  switch(ch)
   {
-    Error_Handler();
+    case _DEF_TIM1:
+      p_tim->h_tim = &htim5;
+      p_tim->func_cb = NULL;
+
+      htim5.Instance = TIM5;
+      htim5.Init.Prescaler = 83;
+      htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+      htim5.Init.Period = 4294967295;
+      htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+      htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+      if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+      if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+      sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+      if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      if (HAL_TIM_Base_Start(&htim5) == HAL_OK)
+      {
+        p_tim->is_start = true;
+        ret = true;
+      }
+      break;
+
+    case _DEF_TIM2:
+      p_tim->h_tim = &htim6;
+      p_tim->func_cb = NULL;
+
+      htim6.Instance = TIM6;
+      htim6.Init.Prescaler = 83;
+      htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+      htim6.Init.Period = 999;
+      htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+      if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+      sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+      if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      if (HAL_TIM_Base_Start_IT(&htim6) == HAL_OK)
+      {
+        p_tim->is_start = true;
+        ret = true;
+      }
+      break;
   }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  #ifdef _USE_HW_CLI
+    cliAdd("timer", cliTimer);
+  #endif
 
-	HAL_TIM_Base_Start(&htim5);
-  /* USER CODE BEGIN TIM5_Init 2 */
-
-  /* USER CODE END TIM5_Init 2 */
-
-}
-
-/* TIM6 init function */
-void MX_TIM6_Init(void)
-{
-
-  /* USER CODE BEGIN TIM6_Init 0 */
-
-  /* USER CODE END TIM6_Init 0 */
-
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM6_Init 1 */
-
-  /* USER CODE END TIM6_Init 1 */
-  htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 83;
-  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 999;
-  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  HAL_TIM_Base_Start_IT(&htim6);
-  /* USER CODE BEGIN TIM6_Init 2 */
-#ifdef _USE_HW_CLI
-  cliAdd("timer", cliTimer);
-#endif
-  /* USER CODE END TIM6_Init 2 */
-
+  return ret;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  static uint32_t last_tick = 0;
-  static uint32_t time_test = 0;
-  if(htim->Instance == TIM6)
+  tim_t *p_tim;
+  for(uint8_t i = 0; i<HW_TIM_MAX_CH; i++)
   {
-    uint32_t curr_tick = micros();
-    time_test = curr_tick -last_tick;
-    last_tick = curr_tick;
+      if (htim->Instance == tim_tbl[i].h_tim->Instance)
+      {
+        p_tim = &tim_tbl[i];
+        if (p_tim->func_cb != NULL)
+        {
+          (*p_tim->func_cb)();
+        }
+      }
   }
+}
+
+void timAttachInterrupt(uint8_t ch, void (*func)())
+{
+  tim_t *p_tim = &tim_tbl[ch];
+
+  if (p_tim->is_start == false)     return;
+
+  p_tim->func_cb = func;
 }
 
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)

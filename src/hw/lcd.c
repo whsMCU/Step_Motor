@@ -73,7 +73,6 @@ void TransferDoneISR(void)
 
 bool lcdInit(void)
 {
-
 	backlight_value = 100;
 
 	TFT_RST_H;

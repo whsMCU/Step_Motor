@@ -40,8 +40,10 @@ extern TIM_HandleTypeDef htim6;
 
 /* USER CODE END Private defines */
 
-void MX_TIM5_Init(void);
-void MX_TIM6_Init(void);
+void tim_Init(void);
+bool timBegin(uint8_t ch);
+
+void timAttachInterrupt(uint8_t ch, void (*func)());
 
 /* USER CODE BEGIN Prototypes */
 

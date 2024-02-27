@@ -30,6 +30,9 @@
 #define _DEF_SPI3             2
 #define _DEF_SPI4             3
 
+#define _DEF_TIM1             0
+#define _DEF_TIM2             1
+
 #define _DEF_LOW              0
 #define _DEF_HIGH             1
 
