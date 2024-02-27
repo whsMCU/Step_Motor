@@ -11,8 +11,9 @@
 static void TimerCallbackISR(void)
 {
   static uint32_t last_tick = 0;
-  static uint32_t time_test = 0;
+  static volatile uint32_t time_test = 0;
   uint32_t curr_tick = micros();
+  //gpioPinToggle(StepX_STEP);
   time_test = curr_tick - last_tick;
   last_tick = curr_tick;
 }
