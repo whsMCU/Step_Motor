@@ -141,14 +141,14 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    if (distanceToGo(&stepper_X) == 0)
-    {
-      disableOutputs(&stepper_X);
-      HAL_Delay(2);
-      enableOutputs(&stepper_X);
-      moveTo(&stepper_X, -currentPosition(&stepper_X));
-    }
-    run(&stepper_X);
+  //  if (distanceToGo(&stepper_X) == 0)
+  //  {
+  //    disableOutputs(&stepper_X);
+  //    HAL_Delay(2);
+  //    enableOutputs(&stepper_X);
+  //    moveTo(&stepper_X, -currentPosition(&stepper_X));
+  //  }
+  //  run(&stepper_X);
 
 	  cliMain();
 	  lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
