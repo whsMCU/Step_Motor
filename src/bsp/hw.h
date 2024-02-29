@@ -11,7 +11,6 @@
 #include "hw_def.h"
 #include "def.h"
 #include "bsp.h"
-
 #include "uart.h"
 #include "usb.h"
 #include "cli.h"

@@ -7,15 +7,18 @@
 
 
 #include <stepper/stepper.h>
+#include "main.h"
 
 static void TimerCallbackISR(void)
 {
-  static uint32_t last_tick = 0;
-  static volatile uint32_t time_test = 0;
-  uint32_t curr_tick = micros();
-  //gpioPinToggle(StepX_STEP);
-  time_test = curr_tick - last_tick;
-  last_tick = curr_tick;
+  gpioPinToggle(StepX_STEP);
+  if (distanceToGo(&stepper_X) == 0)
+  {
+    disableOutputs(&stepper_X);
+    enableOutputs(&stepper_X);
+    moveTo(&stepper_X, -currentPosition(&stepper_X));
+  }
+  run(&stepper_X);
 }
 
 bool stepper_Init(AccelStepper *stepper, uint8_t enablePin, uint8_t dirPin, uint8_t stepPin)
