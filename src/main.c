@@ -118,9 +118,9 @@ int main(void)
                                                                            LV_CHART_AXIS_SECONDARY_Y);
 
   stepper_Init(&stepper_X, StepX_EN, StepX_DIR, StepX_STEP);
-  setAcceleration(&stepper_X, 200);
-  setMaxSpeed(&stepper_X, 200);
-  moveTo(&stepper_X, 200);
+  setMaxSpeed(&stepper_X, 2000);
+  setAcceleration(&stepper_X, 500);
+  moveTo(&stepper_X, 1600);
 
   /* USER CODE END SysInit */
 
@@ -140,11 +140,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
 	  cliMain();
 	  lv_draw_chart(ui_SpeedStepChart_series_Target, ui_SpeedStepChart_series_Step);
-	  //lv_timer_handler_run_in_period(5);
-	  //gpioPinToggle(StepX_STEP);
+
 	  lv_timer_handler();
 	  HAL_Delay(5);
     /* USER CODE BEGIN 3 */

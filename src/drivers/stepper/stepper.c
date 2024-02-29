@@ -11,11 +11,8 @@
 
 static void TimerCallbackISR(void)
 {
-  gpioPinToggle(StepX_STEP);
   if (distanceToGo(&stepper_X) == 0)
   {
-    disableOutputs(&stepper_X);
-    enableOutputs(&stepper_X);
     moveTo(&stepper_X, -currentPosition(&stepper_X));
   }
   run(&stepper_X);
