@@ -44,7 +44,6 @@ static void cliTimer(cli_args_t *args);
 
 void tim_Init(void)
 {
-
   for (int i=0; i<HW_TIM_MAX_CH; i++)
   {
     tim_tbl[i].is_start = false;
@@ -92,6 +91,7 @@ bool timBegin(uint8_t ch)
         p_tim->is_start = true;
         ret = true;
       }
+      logPrintf("[%s] tim5_Init()\r\n", ret ? "OK":"NG");
       break;
 
     case _DEF_TIM2:
@@ -118,6 +118,7 @@ bool timBegin(uint8_t ch)
         p_tim->is_start = true;
         ret = true;
       }
+      logPrintf("[%s] tim6_Init()\r\n", ret ? "OK":"NG");
       break;
   }
   #ifdef _USE_HW_CLI

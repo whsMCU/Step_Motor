@@ -36,11 +36,23 @@ typedef struct
 
 bool cliInit(void);
 bool cliOpen(uint8_t ch, uint32_t baud);
+bool cliIsBusy(void);
 bool cliOpenLog(uint8_t ch, uint32_t baud);
+void cliLogo(void);
 bool cliMain(void);
 void cliPrintf(const char *fmt, ...);
 bool cliAdd(const char *cmd_str, void (*p_func)(cli_args_t *));
 bool cliKeepLoop(void);
+
+void cliPutch(uint8_t data);
+uint8_t  cliGetPort(void);
+uint32_t cliAvailable(void);
+uint8_t  cliRead(void);
+uint32_t cliWrite(uint8_t *p_data, uint32_t length);
+bool cliRunStr(const char *fmt, ...);
+void cliShowCursor(bool visibility);
+void cliMoveUp(uint8_t y);
+void cliMoveDown(uint8_t y);
 
 
 

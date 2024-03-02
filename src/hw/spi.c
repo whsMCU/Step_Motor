@@ -48,6 +48,7 @@ bool spiInit(void)
   	spi_tbl[i].h_dma_tx = NULL;
   }
   cliAdd("spi", cliSPI);
+  logPrintf("[%s] spi_Init()\r\n", ret ? "OK":"NG");
   return ret;
 }
 
@@ -79,6 +80,7 @@ bool spiBegin(uint8_t ch)
       	p_spi->is_open = true;
         ret = true;
       }
+      logPrintf("[%s] spi1_Init()\r\n", ret ? "OK":"NG");
       break;
 
     case _DEF_SPI2:
@@ -101,7 +103,8 @@ bool spiBegin(uint8_t ch)
 		p_spi->is_open = true;
 		ret = true;
 	  }
-      break;
+	  logPrintf("[%s] spi2_Init()\r\n", ret ? "OK":"NG");
+    break;
 
   }
 

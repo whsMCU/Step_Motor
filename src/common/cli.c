@@ -7,14 +7,7 @@
 
 
 
-#include "hw/cli.h"
-
-typedef enum {
-    REBOOT_TARGET_FIRMWARE,
-    REBOOT_TARGET_BOOTLOADER_ROM,
-    REBOOT_TARGET_BOOTLOADER_FLASH,
-} rebootTarget_e;
-
+#include "common/cli.h"
 
 #define CLI_KEY_BACK              0x08
 #define CLI_KEY_DEL               0x7F
@@ -65,6 +58,7 @@ typedef struct
   uint32_t baud;
   bool     is_open;
   bool     is_log;
+  bool     is_busy;
   uint8_t  log_ch;
   uint32_t log_baud;
   uint8_t  state;
@@ -146,6 +140,11 @@ bool cliOpen(uint8_t ch, uint32_t baud)
   return cli_node.is_open;
 }
 
+bool cliIsBusy(void)
+{
+  return cli_node.is_busy;
+}
+
 bool cliOpenLog(uint8_t ch, uint32_t baud)
 {
   bool ret;
@@ -160,6 +159,11 @@ bool cliOpenLog(uint8_t ch, uint32_t baud)
     cli_node.is_log = true;
   }
   return ret;
+}
+
+uint8_t cliGetPort(void)
+{
+  return cli_node.ch;
 }
 
 bool cliLogClose(void)
@@ -207,6 +211,31 @@ bool cliMain(void)
   }
 
   return true;
+}
+
+void cliLogo(void)
+{
+  if (cli_node.is_open != true)
+  {
+    return;
+  }
+
+  cliShowPrompt(&cli_node);
+}
+
+uint32_t cliAvailable(void)
+{
+  return uartAvailable(cli_node.ch);
+}
+
+uint8_t cliRead(void)
+{
+  return uartRead(cli_node.ch);
+}
+
+uint32_t cliWrite(uint8_t *p_data, uint32_t length)
+{
+  return uartWrite(cli_node.ch, p_data, length);
 }
 
 bool cliUpdate(cli_t *p_cli, uint8_t rx_data)
@@ -497,6 +526,7 @@ bool cliRunCmd(cli_t *p_cli)
 
     cliToUpper(p_cli->argv[0]);
 
+    p_cli->is_busy = true;
     for (int i=0; i<p_cli->cmd_count; i++)
     {
       if (strcmp(p_cli->argv[0], p_cli->cmd_list[i].cmd_str) == 0)
@@ -507,6 +537,7 @@ bool cliRunCmd(cli_t *p_cli)
         break;
       }
     }
+    p_cli->is_busy = false;
   }
 
   return ret;
@@ -544,6 +575,21 @@ bool cliParseArgs(cli_t *p_cli)
   return ret;
 }
 
+bool cliRunStr(const char *fmt, ...)
+{
+  bool ret;
+  va_list arg;
+  va_start (arg, fmt);
+  cli_t *p_cli = &cli_node;
+
+  vsnprintf((char *)p_cli->line.buf, CLI_LINE_BUF_MAX, fmt, arg);
+  va_end (arg);
+
+  ret = cliRunCmd(p_cli);
+
+  return ret;
+}
+
 void cliPrintf(const char *fmt, ...)
 {
   va_list arg;
@@ -556,6 +602,13 @@ void cliPrintf(const char *fmt, ...)
   va_end (arg);
 
   uartWrite(p_cli->ch, (uint8_t *)p_cli->print_buffer, len);
+}
+
+void cliPutch(uint8_t data)
+{
+  cli_t *p_cli = &cli_node;
+
+  uartWrite(p_cli->ch, &data, 1);
 }
 
 void cliToUpper(char *str)
@@ -688,6 +741,28 @@ bool cliAdd(const char *cmd_str, void (*p_func)(cli_args_t *))
   p_cli->cmd_count++;
 
   return ret;
+}
+
+void cliShowCursor(bool visibility)
+{
+  if (visibility == false)
+  {
+    cliPrintf("\033[?25l");
+  }
+  else
+  {
+    cliPrintf("\033[?25h");
+  }
+}
+
+void cliMoveUp(uint8_t y)
+{
+  cliPrintf("\x1B[%dA", y);
+}
+
+void cliMoveDown(uint8_t y)
+{
+  cliPrintf("\x1B[%dB", y);
 }
 
 void cliShowList(cli_args_t *args)

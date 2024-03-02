@@ -44,6 +44,8 @@
 
 #define _USE_HW_UART
 #define      HW_UART_MAX_CH         2
+#define      HW_UART_CH_SWD         _DEF_USB
+#define      HW_UART_CH_CLI         _DEF_USB
 
 
 #define _USE_HW_CLI
@@ -51,6 +53,13 @@
 #define      HW_CLI_CMD_LIST_MAX    16
 #define      HW_CLI_LINE_HIS_MAX    4
 #define      HW_CLI_LINE_BUF_MAX    32
+
+#define _USE_HW_LOG
+#define      HW_LOG_CH              HW_UART_CH_SWD
+
+#define _USE_HW_CLI_GUI
+#define      HW_CLI_GUI_WIDTH       80
+#define      HW_CLI_GUI_HEIGHT      24
 
 #define _PIN_GPIO_SDCARD_DETECT     0
 

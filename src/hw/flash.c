@@ -51,12 +51,12 @@ static void cliFlash(cli_args_t *args);
 
 bool flashInit(void)
 {
-
+  bool ret = true;
 #ifdef _USE_HW_CLI
   cliAdd("flash", cliFlash);
 #endif
-
-  return true;
+  logPrintf("[%s] flash_Init()\r\n", ret ? "OK":"NG");
+  return ret;
 }
 
 HAL_StatusTypeDef flashErase(int16_t sector_num, unsigned int FLASH_VOLTAGE_RANGE)

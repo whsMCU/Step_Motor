@@ -9,6 +9,9 @@ bool usbInit(void)
   bool ret = true;
 
   MX_USB_DEVICE_Init();
+  HAL_Delay(100);
+
+  logPrintf("[%s] usb_Init()\n", ret ? "OK":"NG");
 
   return ret;
 }

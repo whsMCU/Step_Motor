@@ -87,7 +87,7 @@ long targetPosition(AccelStepper *stepper);
 long currentPosition(AccelStepper *stepper);
 
 void moveTo(AccelStepper *stepper, long absolute);
-void move(AccelStepper *stepper, long relative);
+void step_move(AccelStepper *stepper, long relative);
 
 bool run(AccelStepper *stepper);
 

@@ -81,6 +81,7 @@ bool gpioInit(void)
 #ifdef _USE_HW_CLI
   cliAdd("gpio", cliGpio);
 #endif
+  logPrintf("[%s] gpio_Init()\r\n", ret ? "OK":"NG");
 
   return ret;
 }

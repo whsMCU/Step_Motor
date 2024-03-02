@@ -60,6 +60,7 @@ bool buttonInit(void)
 #ifdef _USE_HW_CLI
   cliAdd("button", cliButton);
 #endif
+  logPrintf("[%s] button_Init()\r\n", ret ? "OK":"NG");
 
   return ret;
 }

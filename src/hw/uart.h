@@ -41,6 +41,7 @@ uint8_t  uartRead(uint8_t ch);
 uint32_t uartWrite(uint8_t ch, uint8_t *p_data, uint32_t length);
 uint32_t uartWriteIT(uint8_t ch, uint8_t *p_data, uint32_t length);
 void serialPrint(uint8_t channel, const char *str);
+uint32_t uartVPrintf(uint8_t ch, const char *fmt, va_list arg);
 uint32_t uartPrintf(uint8_t ch, char *fmt, ...);
 uint32_t uartPrintf_IT(uint8_t ch, char *fmt, ...);
 uint32_t uartGetBaud(uint8_t ch);

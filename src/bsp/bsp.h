@@ -11,13 +11,13 @@
 
 #include "stm32f4xx_hal.h"
 
-#define _USE_LOG_PRINT    1
-
-#if _USE_LOG_PRINT
-#define logPrintf(fmt, ...)     printf(fmt, ##__VA_ARGS__)
-#else
-#define logPrintf(fmt, ...)
-#endif
+//#define _USE_LOG_PRINT    0
+//
+//#if _USE_LOG_PRINT
+//#define logPrintf(fmt, ...)     printf(fmt, ##__VA_ARGS__)
+//#else
+//#define logPrintf(fmt, ...)
+//#endif
 
 uint32_t getCycleCounter(void);
 

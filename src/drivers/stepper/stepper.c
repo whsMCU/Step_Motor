@@ -75,7 +75,7 @@ void moveTo(AccelStepper *stepper, long absolute)
     }
 }
 
-void move(AccelStepper *stepper, long relative)
+void step_move(AccelStepper *stepper, long relative)
 {
     moveTo(stepper, stepper->_currentPos + relative);
 }

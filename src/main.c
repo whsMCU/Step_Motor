@@ -155,6 +155,13 @@ void hwInit(void)
   #ifdef _USE_HW_RTC
     rtcInit();
   #endif
+  usbInit();
+  uartInit();
+  cliInit();
+  logInit();
+  logOpen(HW_LOG_CH, 115200);
+  logPrintf("\r\n[ Firmware Begin... ]\r\n");
+
   tim_Init();
   timBegin(_DEF_TIM1);
   timBegin(_DEF_TIM2);
@@ -162,9 +169,7 @@ void hwInit(void)
   buttonInit();
   flashInit();
   MX_DMA_Init();
-  usbInit();
-  uartInit();
-  cliInit();
+
   spiInit();
 
 //  if (sdInit() == true)
@@ -172,7 +177,7 @@ void hwInit(void)
 //    fatfsInit();
 //  }
 
-  cliOpen(_DEF_USB, 57600);
+  cliOpen(_DEF_USB, 115200);
 }
 
 /**
